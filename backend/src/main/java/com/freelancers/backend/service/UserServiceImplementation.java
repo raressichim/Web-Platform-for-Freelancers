@@ -17,7 +17,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User saveUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -25,4 +25,10 @@ public class UserServiceImplementation implements UserService {
     public List<User> getUsers() {
         return userRepository.findAll();
     }
+
+    @Override
+    public User login(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
+
 }
