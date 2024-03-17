@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 function Copyright(props) {
   return (
     <Typography
@@ -35,6 +36,7 @@ const SERVER = "http://localhost:8080";
 
 export default function LogInForm() {
   let navigate = useNavigate();
+  const [error, setError] = useState(null);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -55,10 +57,12 @@ export default function LogInForm() {
 
       if (response.ok) {
         navigate("/");
+      } else {
+        setError("Authentication failed");
       }
     } catch (error) {
       console.error("Error:", error);
-      //setError("An error occurred");
+      setError("An error occurred");
     }
   };
 
@@ -105,6 +109,11 @@ export default function LogInForm() {
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
+              {error && (
+                <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+                  {error}
+                </Typography>
+              )}
               <TextField
                 margin="normal"
                 required

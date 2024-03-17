@@ -18,9 +18,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/addUser")
-    public String addUser(@RequestBody User user) {
+    public void addUser(@RequestBody User user) {
         userService.saveUser(user);
-        return "New user added";
     }
 
     @GetMapping("/getUsers")
@@ -29,10 +28,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody Map<String,String> req) {
-        User u = userService.login(req.get("email"),req.get("password"));
-        if (u != null) {
-            return ResponseEntity.ok(u);
+    public ResponseEntity<Boolean> login(@RequestBody Map<String,String> req) {
+        boolean u = userService.login(req.get("email"),req.get("password"));
+        if (u) {
+            return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

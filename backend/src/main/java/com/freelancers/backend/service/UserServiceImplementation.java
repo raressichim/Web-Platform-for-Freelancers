@@ -17,7 +17,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User saveUser(User user) {
-        //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -27,8 +27,9 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User login(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
+    public boolean login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        return user != null && bCryptPasswordEncoder.matches(password, user.getPassword());
     }
 
 }

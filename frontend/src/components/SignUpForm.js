@@ -39,8 +39,9 @@ export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   let name = firstName + " " + lastName;
-
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   let userData = {
     name: name,
     email: email,
@@ -50,21 +51,33 @@ export default function SignUpForm() {
   let navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await fetch(`${SERVER}/user/addUser`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+    if (!firstName || !lastName || !email || !username || !password) {
+      setError("Please complete all fields");
+      return;
+    } else if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
+      return;
+    } else {
+      try {
+        const response = await fetch(`${SERVER}/user/addUser`, {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
 
-      if (response.ok) {
-        navigate("/");
+        if (response.ok) {
+          navigate("/");
+        } else {
+          setError(
+            "A user with this email/username already exists. Please choose a different email/username."
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        setError("An error occurred");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      //setError("An error occurred");
     }
   };
 
@@ -151,6 +164,11 @@ export default function SignUpForm() {
                 />
               </Grid>
             </Grid>
+            {error && (
+              <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+                {error}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth
