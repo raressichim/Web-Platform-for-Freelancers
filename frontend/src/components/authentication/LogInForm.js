@@ -13,6 +13,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useUser } from "../context/UserContext";
+
 function Copyright(props) {
   return (
     <Typography
@@ -36,7 +38,9 @@ const SERVER = "http://localhost:8080";
 
 export default function LogInForm() {
   let navigate = useNavigate();
+  const { login } = useUser();
   const [error, setError] = useState(null);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -55,7 +59,9 @@ export default function LogInForm() {
         body: JSON.stringify(userData),
       });
 
-      if (response.ok) {
+      if (response.ok) { 
+        const user = await response.json();
+        login(user);
         navigate("/");
       } else {
         setError("Authentication failed");

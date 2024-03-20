@@ -16,7 +16,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,6 +65,15 @@ export default function SearchBar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const { loggedInUser } = useUser();
+  //const { login } = useUser();
+  const { logout } = useUser();
+  let navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -175,6 +185,7 @@ export default function SearchBar() {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
+            {loggedInUser && <p>Welcome {loggedInUser.name}</p>}
             ITFreelancers
           </Typography>
           <Search>
@@ -188,9 +199,28 @@ export default function SearchBar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Link to={"/login"}>
+            {!loggedInUser && (
+              <Link to={"/login"}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    color: "white",
+                    borderColor: "white",
+                    height: "30px",
+                    width: "110px",
+                    margin: "8px",
+                  }}
+                >
+                  Log In
+                </Button>
+              </Link>
+            )}
+            {loggedInUser && (
               <Button
                 variant="outlined"
+                onClick={() => {
+                  handleLogout();
+                }}
                 style={{
                   color: "white",
                   borderColor: "white",
@@ -199,9 +229,9 @@ export default function SearchBar() {
                   margin: "8px",
                 }}
               >
-                Log In
+                Logout
               </Button>
-            </Link>
+            )}
             <IconButton
               size="large"
               aria-label="show 4 new mails"

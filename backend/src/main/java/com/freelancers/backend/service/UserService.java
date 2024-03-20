@@ -7,5 +7,5 @@ import java.util.List;
 public interface UserService {
     public User saveUser(User user);
     public List<User> getUsers();
-    public boolean login(String email,String password);
+    public User login(String email,String password);
 }
