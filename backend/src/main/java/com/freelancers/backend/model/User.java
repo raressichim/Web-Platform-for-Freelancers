@@ -14,6 +14,8 @@ public class User {
     private String email;
     private String password;
     private Boolean isSeller;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Seller seller;
     public User(){
         isSeller = false;
     }

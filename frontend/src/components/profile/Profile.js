@@ -20,12 +20,54 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 // import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 // import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { useUser } from "../context/UserContext";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function Profile() {
   const { loggedInUser } = useUser();
-  //const [error, setError] = useState(null);
+  const [bioLength, setBioLength] = useState(null);
+  const [bioText, setBioText] = useState("");
+  const [educationLength, setEducationLength] = useState(null);
+  const [educationText, setEducationText] = useState("");
+  const [skillsLength, setSkillsLength] = useState(null);
+  const [skillsText, setSkillsText] = useState("");
+  const [error, setError] = useState(null);
+  const [isClicked, setIsClicked] = useState(null);
+
+  const handleBioChange = (event) => {
+    const newText = event.target.value;
+    setBioText(newText);
+    setBioLength(500 - newText.length);
+  };
+
+  const handleEducationChange = (event) => {
+    const newText = event.target.value;
+    setEducationText(newText);
+    setEducationLength(350 - newText.length);
+  };
+
+  const handleSkillsChange = (event) => {
+    const newText = event.target.value;
+    setSkillsText(newText);
+    setSkillsLength(255 - newText.length);
+  };
+  let navigate = useNavigate();
+  const handleSave = (event) => {
+    if (
+      bioText.length <= 0 ||
+      educationText <= 0 ||
+      skillsText <= 0 ||
+      bioText == null ||
+      educationText == null ||
+      skillsText == null
+    ) {
+      setError("All the fields must be completed");
+      setIsClicked(true);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
       <Box
@@ -132,10 +174,16 @@ export default function Profile() {
             </Stack>
           </Stack>
         </Card>
+        <p style={{ color: "red" }}>
+          Complete every field in order to become a seller.
+        </p>
 
         <Card>
           <Box sx={{ mb: 1 }}>
-            <Typography level="title-md">Bio</Typography>
+            <Typography level="title-md">
+              {" "}
+              <span style={{ color: "red" }}>*</span> Bio
+            </Typography>
             <Typography level="body-sm">
               Write a short introduction to be displayed on your profile
             </Typography>
@@ -146,26 +194,25 @@ export default function Profile() {
               size="sm"
               minRows={4}
               sx={{ mt: 1.5 }}
-              placeholder="Example: I'm a software developer based in Bangkok, Thailand. My goal is to solve UI problems with neat CSS without using too much JavaScript."
+              placeholder="Example: I'm an experienced IT professional specializing in web, mobile, and software development. With a focus on quality, timely delivery, and clear communication, I'm here to help you bring your digital projects to life."
+              value={bioText}
+              onChange={handleBioChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              255 characters maximum
+              {!bioLength && <p>500 characters left</p>}
+              {bioLength >= 0 && <p>{bioLength} characters left</p>}
+              {bioLength < 0 && (
+                <p style={{ color: "red" }}>Maximum characters limit reached</p>
+              )}
             </FormHelperText>
           </Stack>
-          <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
-            <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
-                Cancel
-              </Button>
-              <Button size="sm" variant="solid">
-                Save
-              </Button>
-            </CardActions>
-          </CardOverflow>
         </Card>
         <Card>
           <Box sx={{ mb: 1 }}>
-            <Typography level="title-md">Education</Typography>
+            <Typography level="title-md">
+              {" "}
+              <span style={{ color: "red" }}>*</span>Education
+            </Typography>
             <Typography level="body-sm">
               Write about your studies in order to be displayed on your profile.
             </Typography>
@@ -177,25 +224,24 @@ export default function Profile() {
               minRows={4}
               sx={{ mt: 1.5 }}
               placeholder="HighSchool, University, etc."
+              value={educationText}
+              onChange={handleEducationChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              255 characters maximum
+              {!educationLength && <p>350 characters left</p>}
+              {educationLength >= 0 && <p>{educationLength} characters left</p>}
+              {educationLength < 0 && (
+                <p style={{ color: "red" }}>Maximum characters limit reached</p>
+              )}
             </FormHelperText>
           </Stack>
-          <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
-            <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
-                Cancel
-              </Button>
-              <Button size="sm" variant="solid">
-                Save
-              </Button>
-            </CardActions>
-          </CardOverflow>
         </Card>
         <Card>
           <Box sx={{ mb: 1 }}>
-            <Typography level="title-md">Skills</Typography>
+            <Typography level="title-md">
+              {" "}
+              <span style={{ color: "red" }}>*</span>Skills
+            </Typography>
             <Typography level="body-sm">
               Share your most important skills separated by ',' .
             </Typography>
@@ -207,17 +253,23 @@ export default function Profile() {
               minRows={4}
               sx={{ mt: 1.5 }}
               placeholder="JAVA, OOP, C, React, etc."
+              value={skillsText}
+              onChange={handleSkillsChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              255 characters maximum
+              {!skillsLength && <p>255 characters left</p>}
+              {skillsLength >= 0 && <p>{skillsLength} characters left</p>}
+              {skillsLength < 0 && (
+                <p style={{ color: "red" }}>Maximum characters limit reached</p>
+              )}
             </FormHelperText>
           </Stack>
           <CardOverflow sx={{ borderTop: "1px solid", borderColor: "divider" }}>
-            <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
-                Cancel
-              </Button>
-              <Button size="sm" variant="solid">
+            <CardActions sx={{ display: "flex", alignItems: "center" }}>
+              {isClicked && error && (
+                <p style={{ color: "red", marginRight: "auto" }}>{error}</p>
+              )}
+              <Button size="sm" variant="solid" onClick={handleSave}>
                 Save
               </Button>
             </CardActions>
