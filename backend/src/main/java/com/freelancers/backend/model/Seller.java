@@ -1,6 +1,7 @@
 package com.freelancers.backend.model;
 
 import jakarta.persistence.*;
+
 @Entity
 public class Seller {
     @Id
@@ -12,6 +13,10 @@ public class Seller {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public String toString() {

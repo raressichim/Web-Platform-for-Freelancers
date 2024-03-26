@@ -51,8 +51,15 @@ export default function Profile() {
     setSkillsText(newText);
     setSkillsLength(255 - newText.length);
   };
+  const SERVER = "http://localhost:8080";
+  const userId = loggedInUser.id;
   let navigate = useNavigate();
-  const handleSave = (event) => {
+  let sellerData = {
+    description: bioText,
+    education: educationText,
+    skills: skillsText,
+  };
+  const handleSave = async (event) => {
     if (
       bioText.length <= 0 ||
       educationText <= 0 ||
@@ -64,7 +71,19 @@ export default function Profile() {
       setError("All the fields must be completed");
       setIsClicked(true);
     } else {
-      navigate("/");
+      try {
+        fetch(`${SERVER}/seller/addSeller/${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sellerData),
+        });
+      } catch (error) {
+        console.error("Error:", error);
+        setError("An error occurred");
+      }
+      //navigate("/");
     }
   };
 
