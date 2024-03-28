@@ -18,6 +18,42 @@ public class Seller {
         this.user = user;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Seller{");

@@ -14,6 +14,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 
 const Search = styled("div")(({ theme }) => ({
@@ -60,6 +61,26 @@ export default function SearchBar() {
   const { loggedInUser } = useUser();
   const { logout } = useUser();
   let navigate = useNavigate();
+
+  const [isSeller, setIsSeller] = useState(false);
+  const SERVER = "http://localhost:8080";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (loggedInUser) {
+          const response = await fetch(
+            `${SERVER}/seller/check/${loggedInUser.id}`
+          );
+          const data = await response.json();
+          setIsSeller(data);
+        }
+      } catch (error) {
+        console.error("Error fetching seller status:", error);
+      }
+    };
+
+    fetchData();
+  }, [loggedInUser]);
 
   const handleLogout = () => {
     logout();
@@ -129,8 +150,8 @@ export default function SearchBar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {loggedInUser && (
-              <Link to={"/profile"}>
+            {loggedInUser && !isSeller && (
+              <Link to={"/becomeSeller"}>
                 <Button
                   variant="outlined"
                   style={{

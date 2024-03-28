@@ -16,7 +16,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Profile() {
   const { loggedInUser } = useUser();
@@ -28,29 +28,6 @@ export default function Profile() {
   const [skillsText, setSkillsText] = useState("");
   const [error, setError] = useState(null);
   const [isClicked, setIsClicked] = useState(null);
-  const SERVER = "http://localhost:8080";
-  useEffect(() => {
-    const fetchSellerData = async () => {
-      try {
-        const response = await fetch(
-          `${SERVER}/seller/getSeller/${loggedInUser.id}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setBioText(data.description);
-          setEducationText(data.education);
-          setSkillsText(data.skills);
-        } else {
-          setError("Failed to fetch seller data");
-        }
-      } catch (error) {
-        console.error("Error fetching seller data:", error);
-        setError("An error occurred while fetching seller data");
-      }
-    };
-
-    fetchSellerData();
-  }, [loggedInUser.id]);
 
   const handleBioChange = (event) => {
     const newText = event.target.value;
@@ -69,7 +46,8 @@ export default function Profile() {
     setSkillsText(newText);
     setSkillsLength(255 - newText.length);
   };
-
+  const SERVER = "http://localhost:8080";
+  const userId = loggedInUser.id;
   let navigate = useNavigate();
   let sellerData = {
     description: bioText,
@@ -89,24 +67,17 @@ export default function Profile() {
       setIsClicked(true);
     } else {
       try {
-        const response = await fetch(
-          `http://localhost:8080/seller/update/${loggedInUser.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              description: bioText,
-              education: educationText,
-              skills: skillsText,
-            }),
-          }
-        );
+        const response = fetch(`${SERVER}/seller/addSeller/${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sellerData),
+        });
         if (response.ok) {
           navigate("/");
         } else {
-          setError("Failed to update your new data. Please try again.");
+          setError("Error ecountered");
         }
         console.log(sellerData);
       } catch (error) {
@@ -181,6 +152,9 @@ export default function Profile() {
             </Stack>
           </Stack>
         </Card>
+        <p style={{ color: "red" }}>
+          Complete every field in order to become a seller.
+        </p>
 
         <Card>
           <Box sx={{ mb: 1 }}>
