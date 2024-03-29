@@ -84,6 +84,7 @@ export default function SearchBar() {
 
   const handleLogout = () => {
     logout();
+    handleMenuClose();
     navigate("/");
   };
 
@@ -112,9 +113,15 @@ export default function SearchBar() {
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
     >
-      <Link to="/profile" style={{ textDecoration: "none", color: "inherit" }}>
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      </Link>
+      <MenuItem onClick={handleMenuClose}>
+        <Link
+          to={!isSeller ? "/userProfile" : "/profile"}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          Profile
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleLogout}>LogOut</MenuItem>
     </Menu>
   );
 
@@ -182,23 +189,7 @@ export default function SearchBar() {
                 </Button>
               </Link>
             )}
-            {loggedInUser && (
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  handleLogout();
-                }}
-                style={{
-                  color: "white",
-                  borderColor: "white",
-                  height: "30px",
-                  width: "110px",
-                  margin: "8px",
-                }}
-              >
-                Logout
-              </Button>
-            )}
+
             {loggedInUser && (
               <IconButton
                 size="large"

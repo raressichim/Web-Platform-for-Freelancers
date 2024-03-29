@@ -4,6 +4,7 @@ import SignUpForm from "./components/authentication/SignUpForm";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Profile from "./components/profile/Profile";
 import BecomeSeller from "./components/profile/BecomeSeller";
+import UserProfile from "./components/profile/UserProfile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/signup" element={<SignUpForm />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/becomeSeller" element={<BecomeSeller />}></Route>
+          <Route path="/userProfile" element={<UserProfile />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
