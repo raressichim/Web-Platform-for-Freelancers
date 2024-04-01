@@ -13,11 +13,10 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    private Boolean isSeller;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Seller seller;
     public User(){
-        isSeller = false;
+
     }
 
     public int getId() {
@@ -60,14 +59,6 @@ public class User {
         this.password = password;
     }
 
-    public Boolean getSeller() {
-        return isSeller;
-    }
-
-    public void setSeller(Boolean seller) {
-        isSeller = seller;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
@@ -76,7 +67,6 @@ public class User {
         sb.append(", name='").append(name).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", password='").append(password).append('\'');
-        sb.append(", isSeller=' ").append(isSeller).append('\'');
         sb.append('}');
         return sb.toString();
     }

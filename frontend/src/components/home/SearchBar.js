@@ -101,7 +101,7 @@ export default function SearchBar() {
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: "top",
+        vertical: "bottom",
         horizontal: "right",
       }}
       id={menuId}
@@ -112,6 +112,12 @@ export default function SearchBar() {
       }}
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
+      PaperProps={{
+        style: {
+          marginTop: "8px",
+          marginLeft: "14px",
+        },
+      }}
     >
       <MenuItem onClick={handleMenuClose}>
         <Link
