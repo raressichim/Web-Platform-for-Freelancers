@@ -112,6 +112,7 @@ export default function SearchBar() {
       }}
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
+      MenuListProps={{ onMouseLeave: handleMenuClose }}
       PaperProps={{
         style: {
           marginTop: "8px",
@@ -127,7 +128,7 @@ export default function SearchBar() {
           Profile
         </Link>
       </MenuItem>
-      <MenuItem onClick={handleLogout}>LogOut</MenuItem>
+      <MenuItem onClick={handleLogout}>Log out</MenuItem>
     </Menu>
   );
 
@@ -221,7 +222,7 @@ export default function SearchBar() {
                 aria-label="account of current user"
                 aria-controls={menuId}
                 aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
+                onMouseOver={handleProfileMenuOpen}
                 color="inherit"
               >
                 <AccountCircle />
