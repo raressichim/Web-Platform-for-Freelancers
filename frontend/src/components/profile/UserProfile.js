@@ -34,7 +34,7 @@ export default function Profile() {
             <ReactRouterLink to="/">
               <HomeRoundedIcon />
             </ReactRouterLink>
-            <Typography color="primary" fontWeight={500} fontSize={12}>
+            <Typography color="black" fontWeight={500} fontSize={12}>
               My profile
             </Typography>
           </Breadcrumbs>
@@ -53,7 +53,14 @@ export default function Profile() {
           py: { xs: 2, md: 3 },
         }}
       >
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.5)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Name</Typography>
           </Box>
@@ -62,7 +69,14 @@ export default function Profile() {
             <Typography>{loggedInUser ? loggedInUser.name : ""}</Typography>
           </Stack>
         </Card>
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.5)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md"> Username</Typography>
           </Box>
@@ -71,7 +85,14 @@ export default function Profile() {
             <Typography>{loggedInUser ? loggedInUser.username : ""}</Typography>
           </Stack>
         </Card>
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.5)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Email</Typography>
           </Box>

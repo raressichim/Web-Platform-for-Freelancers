@@ -59,7 +59,7 @@ export default function LogInForm() {
         body: JSON.stringify(userData),
       });
 
-      if (response.ok) { 
+      if (response.ok) {
         const user = await response.json();
         login(user);
         navigate("/");
@@ -144,13 +144,24 @@ export default function LogInForm() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  color: "white",
+                  borderColor: "#000",
+                  backgroundColor: "black",
+                  transition: "background-color 0.3s, color 0.3s",
+                  "&:hover": {
+                    backgroundColor: "white",
+                    color: "black",
+                  },
+                }}
               >
                 Sign In
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="#" variant="body2" sx={{ color: "black" }}>
                     Forgot password?
                   </Link>
                 </Grid>

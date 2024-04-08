@@ -8,14 +8,15 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Button from "@mui/material/Button";
+import Image from "mui-image";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
+import palmtreesImage from "../../assets/palmtrees.jpg";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -134,17 +135,8 @@ export default function SearchBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: "#fff", color: "#000" }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
@@ -169,8 +161,8 @@ export default function SearchBar() {
                 <Button
                   variant="outlined"
                   style={{
-                    color: "white",
-                    borderColor: "white",
+                    color: "black",
+                    borderColor: "black",
                     height: "30px",
                     width: "160px",
                     margin: "8px",
@@ -185,8 +177,8 @@ export default function SearchBar() {
                 <Button
                   variant="outlined"
                   style={{
-                    color: "white",
-                    borderColor: "white",
+                    color: "black",
+                    borderColor: "black",
                     height: "30px",
                     width: "110px",
                     margin: "8px",
@@ -232,6 +224,18 @@ export default function SearchBar() {
         </Toolbar>
       </AppBar>
       {renderMenu}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          height: "50vh",
+        }}
+      >
+        <div style={{ width: "100%" }}>
+          <Image src={palmtreesImage} alt="A descriptive alt text" />
+        </div>
+      </Box>
     </Box>
   );
 }

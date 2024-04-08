@@ -136,7 +136,7 @@ export default function Profile() {
             <ReactRouterLink to="/">
               <HomeRoundedIcon />
             </ReactRouterLink>
-            <Typography color="primary" fontWeight={500} fontSize={12}>
+            <Typography color="black" fontWeight={500} fontSize={12}>
               My profile
             </Typography>
           </Breadcrumbs>
@@ -155,7 +155,14 @@ export default function Profile() {
           py: { xs: 2, md: 3 },
         }}
       >
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">Personal info</Typography>
           </Box>
@@ -182,7 +189,14 @@ export default function Profile() {
           </Stack>
         </Card>
 
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
               {" "}
@@ -211,7 +225,14 @@ export default function Profile() {
             </FormHelperText>
           </Stack>
         </Card>
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0,0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
               {" "}
@@ -240,7 +261,14 @@ export default function Profile() {
             </FormHelperText>
           </Stack>
         </Card>
-        <Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
               {" "}
@@ -273,7 +301,21 @@ export default function Profile() {
               {isClicked && error && (
                 <p style={{ color: "red", marginRight: "auto" }}>{error}</p>
               )}
-              <Button size="sm" variant="solid" onClick={handleSave}>
+              <Button
+                size="sm"
+                variant="solid"
+                sx={{
+                  color: "#000",
+                  borderColor: "#000",
+                  backgroundColor: "#fff",
+                  transition: "background-color 0.3s, color 0.3s",
+                  "&:hover": {
+                    backgroundColor: "#000",
+                    color: "#fff",
+                  },
+                }}
+                onClick={handleSave}
+              >
                 Save
               </Button>
             </CardActions>
