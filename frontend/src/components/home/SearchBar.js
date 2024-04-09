@@ -12,25 +12,26 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Button from "@mui/material/Button";
-import Image from "mui-image";
+import CardMedia from "@mui/material/CardMedia";
+import Card from "@mui/material/Card";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
-import palmtreesImage from "../../assets/palmtrees.jpg";
+import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: alpha(theme.palette.grey[300], 0.15),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.grey[300], 0.25),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: "100%",
+  width: "auto",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: "auto",
+    width: "1000px",
   },
 }));
 
@@ -59,8 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { loggedInUser } = useUser();
-  const { logout } = useUser();
+  const { loggedInUser, logout } = useUser();
   let navigate = useNavigate();
 
   const [isSeller, setIsSeller] = useState(false);
@@ -134,7 +134,8 @@ export default function SearchBar() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      {/* Render the AppBar */}
       <AppBar position="static" sx={{ backgroundColor: "#fff", color: "#000" }}>
         <Toolbar>
           <Typography
@@ -161,11 +162,21 @@ export default function SearchBar() {
                 <Button
                   variant="outlined"
                   style={{
-                    color: "black",
-                    borderColor: "black",
                     height: "30px",
                     width: "160px",
                     margin: "8px",
+                  }}
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    color: "black",
+                    borderColor: "black",
+                    backgroundColor: "white",
+                    transition: "background-color 0.3s, color 0.3s",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "white",
+                    },
                   }}
                 >
                   Become a seller
@@ -177,11 +188,21 @@ export default function SearchBar() {
                 <Button
                   variant="outlined"
                   style={{
-                    color: "black",
-                    borderColor: "black",
                     height: "30px",
                     width: "110px",
                     margin: "8px",
+                  }}
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    color: "black",
+                    borderColor: "black",
+                    backgroundColor: "white",
+                    transition: "background-color 0.3s, color 0.3s",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "white",
+                    },
                   }}
                 >
                   Log In
@@ -224,18 +245,46 @@ export default function SearchBar() {
         </Toolbar>
       </AppBar>
       {renderMenu}
+      {/* Render the image with overlayed text */}
       <Box
         sx={{
           flex: 1,
           display: "flex",
           justifyContent: "center",
-          height: "50vh",
+          alignItems: "center",
+          overflow: "hidden",
         }}
       >
-        <div style={{ width: "100%" }}>
-          <Image src={palmtreesImage} alt="A descriptive alt text" />
-        </div>
+        <Card style={{ height: "90vh" }}>
+          <CardMedia
+            component="video"
+            image={palmtreesVideo}
+            autoPlay
+            loop
+            muted
+          />
+          <Typography
+            variant="h4"
+            component="div"
+            sx={{
+              position: "absolute",
+              textAlign: "center",
+              color: "white",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              padding: "10px",
+              borderRadius: "5px",
+              bottom: "50%",
+              left: "50%",
+              transform: "translate(-50%, 50%)",
+            }}
+          >
+            Service for freelancers
+            <br />
+            Work anytime anywhere
+          </Typography>
+        </Card>
       </Box>
+      <Box>Recent gigs</Box>
     </Box>
   );
 }
