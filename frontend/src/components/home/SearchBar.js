@@ -255,7 +255,7 @@ export default function SearchBar() {
           overflow: "hidden",
         }}
       >
-        <Card style={{ height: "90vh" }}>
+        <Card style={{ height: "95vh" }}>
           <CardMedia
             component="video"
             image={palmtreesVideo}

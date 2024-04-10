@@ -14,6 +14,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
+import palmtreesPhoto from "../../assets/palmtreesPhoto.jpg";
 
 function Copyright(props) {
   return (
@@ -82,8 +83,7 @@ export default function LogInForm() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+            backgroundImage: `url(${palmtreesPhoto})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
