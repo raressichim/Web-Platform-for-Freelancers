@@ -6,25 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-public class Seller {
+@ToString
+public class Gig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String title;
+    private String category;
+    private float price;
     private String description;
-    private String education;
-    private String skills;
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Gig> gigs;
-
+    private String photoUrl;
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller owner;
 }
