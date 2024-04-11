@@ -16,7 +16,7 @@ public class Gig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
-    private String category;
+    private String tags;
     private float price;
     private String description;
     private String photoUrl;

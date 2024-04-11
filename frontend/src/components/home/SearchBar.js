@@ -31,7 +31,7 @@ const Search = styled("div")(({ theme }) => ({
   width: "auto",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: "1000px",
+    width: "950px",
   },
 }));
 
@@ -135,7 +135,6 @@ export default function SearchBar() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      {/* Render the AppBar */}
       <AppBar position="static" sx={{ backgroundColor: "#fff", color: "#000" }}>
         <Toolbar>
           <Typography
@@ -180,6 +179,32 @@ export default function SearchBar() {
                   }}
                 >
                   Become a seller
+                </Button>
+              </Link>
+            )}
+            {loggedInUser && isSeller && (
+              <Link to={"/sellerBoard"}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    height: "30px",
+                    width: "170px",
+                    margin: "8px",
+                  }}
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    color: "black",
+                    borderColor: "black",
+                    backgroundColor: "white",
+                    transition: "background-color 0.3s, color 0.3s",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "white",
+                    },
+                  }}
+                >
+                  Switch to selling
                 </Button>
               </Link>
             )}
@@ -245,7 +270,6 @@ export default function SearchBar() {
         </Toolbar>
       </AppBar>
       {renderMenu}
-      {/* Render the image with overlayed text */}
       <Box
         sx={{
           flex: 1,

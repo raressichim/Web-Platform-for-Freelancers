@@ -71,11 +71,7 @@ export default function Profile() {
   };
 
   let navigate = useNavigate();
-  let sellerData = {
-    description: bioText,
-    education: educationText,
-    skills: skillsText,
-  };
+
   const handleSave = async (event) => {
     if (
       bioText.length <= 0 ||
@@ -108,7 +104,6 @@ export default function Profile() {
         } else {
           setError("Failed to update your new data. Please try again.");
         }
-        console.log(sellerData);
       } catch (error) {
         console.error("Error:", error);
         setError("An error occurred");

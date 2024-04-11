@@ -18,16 +18,24 @@ import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export default function Profile() {
+export default function SellerDashboard() {
   const { loggedInUser } = useUser();
+  const [titleLength, setTitleLength] = useState(null);
+  const [titleText, setTitleText] = useState("");
   const [bioLength, setBioLength] = useState(null);
   const [bioText, setBioText] = useState("");
-  const [educationLength, setEducationLength] = useState(null);
-  const [educationText, setEducationText] = useState("");
-  const [skillsLength, setSkillsLength] = useState(null);
-  const [skillsText, setSkillsText] = useState("");
+  const [tagsLength, setTagsLength] = useState(null);
+  const [tagsText, setTagsText] = useState("");
+  const [priceLength, setPriceLength] = useState(null);
+  const [priceText, setPriceText] = useState("");
   const [error, setError] = useState(null);
   const [isClicked, setIsClicked] = useState(null);
+
+  const handleTitleChange = (event) => {
+    const newText = event.target.value;
+    setTitleText(newText);
+    setTitleLength(100 - newText.length);
+  };
 
   const handleBioChange = (event) => {
     const newText = event.target.value;
@@ -35,44 +43,53 @@ export default function Profile() {
     setBioLength(500 - newText.length);
   };
 
-  const handleEducationChange = (event) => {
+  const handleTagsChange = (event) => {
     const newText = event.target.value;
-    setEducationText(newText);
-    setEducationLength(350 - newText.length);
+    setTagsText(newText);
+    setTagsLength(350 - newText.length);
   };
 
-  const handleSkillsChange = (event) => {
+  const handlePriceChange = (event) => {
     const newText = event.target.value;
-    setSkillsText(newText);
-    setSkillsLength(255 - newText.length);
+    setPriceText(newText);
+    setPriceLength(10 - newText.length);
   };
   const SERVER = "http://localhost:8080";
   const userId = loggedInUser.id;
   let navigate = useNavigate();
-  let sellerData = {
+  const gigData = {
+    title: titleText,
+    tags: tagsText,
+    price: priceText,
     description: bioText,
-    education: educationText,
-    skills: skillsText,
   };
   const handleSave = async (event) => {
+    const price = parseFloat(priceText);
+    if (isNaN(price)) {
+      setError("Price must be a valid number");
+      setIsClicked(true);
+      return;
+    }
     if (
+      titleText.length <= 0 ||
       bioText.length <= 0 ||
-      educationText <= 0 ||
-      skillsText <= 0 ||
+      tagsText <= 0 ||
+      priceText <= 0 ||
+      titleText == null ||
       bioText == null ||
-      educationText == null ||
-      skillsText == null
+      tagsText == null ||
+      priceText == null
     ) {
       setError("All the fields must be completed");
       setIsClicked(true);
     } else {
       try {
-        const response = await fetch(`${SERVER}/seller/addSeller/${userId}`, {
+        const response = await fetch(`${SERVER}/gig/addGig/${userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(sellerData),
+          body: JSON.stringify(gigData),
         });
         if (response.ok) {
           navigate("/");
@@ -107,11 +124,11 @@ export default function Profile() {
               <HomeRoundedIcon />
             </ReactRouterLink>
             <Typography color="black" fontWeight={500} fontSize={12}>
-              My profile
+              Selling menu
             </Typography>
           </Breadcrumbs>
           <Typography level="h2" component="h1" sx={{ mt: 1, mb: 2 }}>
-            My profile
+            Sell a new gig
           </Typography>
         </Box>
       </Box>
@@ -159,9 +176,8 @@ export default function Profile() {
           </Stack>
         </Card>
         <p style={{ color: "red" }}>
-          Complete every field in order to become a seller.
+          Complete every field in order to start selling this gig.
         </p>
-
         <Card
           sx={{
             border: "2px solid rgba(0, 0, 0, 0.7)",
@@ -172,11 +188,71 @@ export default function Profile() {
         >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
-              {" "}
-              <span style={{ color: "red" }}>*</span> Bio
+              <span style={{ color: "red" }}>*</span> Photo
             </Typography>
             <Typography level="body-sm">
-              Write a short introduction to be displayed on your profile
+              Upload a photo relevant to your service
+            </Typography>
+          </Box>
+          <Divider />
+          {/* <Stack spacing={2} sx={{ my: 1 }}>
+            <Textarea
+              size="sm"
+              minRows={2}
+              sx={{ mt: 1.5 }}
+              placeholder="Example: Web Logo"
+              value={bioText}
+              onChange={handleBioChange}
+            />
+          </Stack> */}
+        </Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
+          <Box sx={{ mb: 1 }}>
+            <Typography level="title-md">
+              <span style={{ color: "red" }}>*</span> Title
+            </Typography>
+            <Typography level="body-sm">Give your gig a title.</Typography>
+          </Box>
+          <Divider />
+          <Stack spacing={2} sx={{ my: 1 }}>
+            <Textarea
+              size="sm"
+              minRows={2}
+              sx={{ mt: 1.5 }}
+              placeholder="Example: Web Logo"
+              value={titleText}
+              onChange={handleTitleChange}
+            />
+            <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
+              {!titleLength && <p>100 characters left</p>}
+              {titleLength >= 0 && <p>{titleLength} characters left</p>}
+              {titleLength < 0 && (
+                <p style={{ color: "red" }}>Maximum characters limit reached</p>
+              )}
+            </FormHelperText>
+          </Stack>
+        </Card>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+          }}
+        >
+          <Box sx={{ mb: 1 }}>
+            <Typography level="title-md">
+              <span style={{ color: "red" }}>*</span> Description
+            </Typography>
+            <Typography level="body-sm">
+              Write a short introduction of your new service.
             </Typography>
           </Box>
           <Divider />
@@ -185,7 +261,7 @@ export default function Profile() {
               size="sm"
               minRows={4}
               sx={{ mt: 1.5 }}
-              placeholder="Example: I'm an experienced IT professional specializing in web, mobile, and software development. With a focus on quality, timely delivery, and clear communication, I'm here to help you bring your digital projects to life."
+              placeholder="Example: Need top-notch IT solutions? Look no further! I offer expert services including website development, software solutions, cybersecurity consultation, cloud management, IT infrastructure, and consulting."
               value={bioText}
               onChange={handleBioChange}
             />
@@ -209,10 +285,11 @@ export default function Profile() {
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
               {" "}
-              <span style={{ color: "red" }}>*</span>Education
+              <span style={{ color: "red" }}>*</span>Tags
             </Typography>
             <Typography level="body-sm">
-              Write about your studies in order to be displayed on your profile.
+              Write the tags that best suit your gig. Note that these will be
+              the tags by which the service will be identified.
             </Typography>
           </Box>
           <Divider />
@@ -221,14 +298,14 @@ export default function Profile() {
               size="sm"
               minRows={4}
               sx={{ mt: 1.5 }}
-              placeholder="HighSchool, University, etc."
-              value={educationText}
-              onChange={handleEducationChange}
+              placeholder="Example: Web Developing, Java, React, etc."
+              value={tagsText}
+              onChange={handleTagsChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              {!educationLength && <p>350 characters left</p>}
-              {educationLength >= 0 && <p>{educationLength} characters left</p>}
-              {educationLength < 0 && (
+              {!tagsLength && <p>350 characters left</p>}
+              {tagsLength >= 0 && <p>{tagsLength} characters left</p>}
+              {tagsLength < 0 && (
                 <p style={{ color: "red" }}>Maximum characters limit reached</p>
               )}
             </FormHelperText>
@@ -245,26 +322,26 @@ export default function Profile() {
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
               {" "}
-              <span style={{ color: "red" }}>*</span>Skills
+              <span style={{ color: "red" }}>*</span>Price
             </Typography>
             <Typography level="body-sm">
-              Share your most important skills separated by ',' .
+              Set a price in euros for your service.
             </Typography>
           </Box>
           <Divider />
           <Stack spacing={2} sx={{ my: 1 }}>
             <Textarea
               size="sm"
-              minRows={4}
+              minRows={2}
               sx={{ mt: 1.5 }}
-              placeholder="JAVA, OOP, C, React, etc."
-              value={skillsText}
-              onChange={handleSkillsChange}
+              placeholder="Example: 100"
+              value={priceText}
+              onChange={handlePriceChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              {!skillsLength && <p>255 characters left</p>}
-              {skillsLength >= 0 && <p>{skillsLength} characters left</p>}
-              {skillsLength < 0 && (
+              {!priceLength && <p>10 characters left</p>}
+              {priceLength >= 0 && <p>{priceLength} characters left</p>}
+              {priceLength < 0 && (
                 <p style={{ color: "red" }}>Maximum characters limit reached</p>
               )}
             </FormHelperText>

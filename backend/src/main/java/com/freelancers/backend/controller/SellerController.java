@@ -38,7 +38,6 @@ public class SellerController {
         if (user != null) {
             seller.setUser(user);
             sellerService.saveSeller(seller);
-            System.out.println(seller.toString());
             return ResponseEntity.ok(seller);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Profile from "./components/profile/Profile";
 import BecomeSeller from "./components/profile/BecomeSeller";
 import UserProfile from "./components/profile/UserProfile";
+import SellerDashboard from "./components/sellerBoard/SellerBoard";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/becomeSeller" element={<BecomeSeller />}></Route>
           <Route path="/userProfile" element={<UserProfile />}></Route>
+          <Route path="/sellerBoard" element={<SellerDashboard />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
