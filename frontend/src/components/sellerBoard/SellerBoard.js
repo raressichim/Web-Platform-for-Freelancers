@@ -16,7 +16,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function SellerDashboard() {
   const { loggedInUser } = useUser();
@@ -30,6 +30,7 @@ export default function SellerDashboard() {
   const [priceText, setPriceText] = useState("");
   const [error, setError] = useState(null);
   const [isClicked, setIsClicked] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleTitleChange = (event) => {
     const newText = event.target.value;
@@ -53,6 +54,15 @@ export default function SellerDashboard() {
     const newText = event.target.value;
     setPriceText(newText);
     setPriceLength(10 - newText.length);
+  };
+
+  const handlePhotoChange = () => {
+    const file = fileInputRef.current.files[0];
+    console.log("Selected file:", file);
+  };
+
+  const handleChooseFile = () => {
+    fileInputRef.current.click();
   };
   const SERVER = "http://localhost:8080";
   const userId = loggedInUser.id;
@@ -178,6 +188,7 @@ export default function SellerDashboard() {
         <p style={{ color: "red" }}>
           Complete every field in order to start selling this gig.
         </p>
+
         <Card
           sx={{
             border: "2px solid rgba(0, 0, 0, 0.7)",
@@ -188,23 +199,39 @@ export default function SellerDashboard() {
         >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
-              <span style={{ color: "red" }}>*</span> Photo
+              <span style={{ color: "red" }}>*</span> Title
             </Typography>
             <Typography level="body-sm">
-              Upload a photo relevant to your service
+              Upload a photo to be displayed on your gig's card.
             </Typography>
           </Box>
-          <Divider />
-          {/* <Stack spacing={2} sx={{ my: 1 }}>
-            <Textarea
-              size="sm"
-              minRows={2}
-              sx={{ mt: 1.5 }}
-              placeholder="Example: Web Logo"
-              value={bioText}
-              onChange={handleBioChange}
-            />
-          </Stack> */}
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            onChange={handlePhotoChange}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              mb: 2,
+              color: "white",
+              borderColor: "#000",
+              backgroundColor: "black",
+              transition: "background-color 0.3s, color 0.3s",
+              "&:hover": {
+                backgroundColor: "white",
+                color: "black",
+              },
+            }}
+            onClick={handleChooseFile}
+          >
+            Choose Photo
+          </Button>
         </Card>
         <Card
           sx={{
