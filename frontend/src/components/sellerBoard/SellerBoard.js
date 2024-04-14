@@ -31,6 +31,7 @@ export default function SellerDashboard() {
   const [error, setError] = useState(null);
   const [isClicked, setIsClicked] = useState(null);
   const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleTitleChange = (event) => {
     const newText = event.target.value;
@@ -59,6 +60,7 @@ export default function SellerDashboard() {
   const handlePhotoChange = () => {
     const file = fileInputRef.current.files[0];
     console.log("Selected file:", file);
+    setSelectedFile(file);
   };
 
   const handleChooseFile = () => {
@@ -67,12 +69,6 @@ export default function SellerDashboard() {
   const SERVER = "http://localhost:8080";
   const userId = loggedInUser.id;
   let navigate = useNavigate();
-  const gigData = {
-    title: titleText,
-    tags: tagsText,
-    price: priceText,
-    description: bioText,
-  };
   const handleSave = async (event) => {
     const price = parseFloat(priceText);
     if (isNaN(price)) {
@@ -93,13 +89,16 @@ export default function SellerDashboard() {
       setError("All the fields must be completed");
       setIsClicked(true);
     } else {
+      const formData = new FormData();
+      formData.append("title", titleText);
+      formData.append("tags", tagsText);
+      formData.append("price", priceText);
+      formData.append("description", bioText);
+      formData.append("photo", selectedFile);
       try {
         const response = await fetch(`${SERVER}/gig/addGig/${userId}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(gigData),
+          body: formData,
         });
         if (response.ok) {
           navigate("/");

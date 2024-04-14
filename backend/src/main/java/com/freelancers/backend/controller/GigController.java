@@ -8,9 +8,12 @@ import com.freelancers.backend.repository.UserRepository;
 import com.freelancers.backend.service.GigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -25,8 +28,13 @@ public class GigController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/addGig/{userId}")
-    public ResponseEntity<Gig> addGig(@PathVariable int userId, @RequestBody Gig gig) {
+    @PostMapping(value = "/addGig/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Gig> addGig(@PathVariable int userId, @RequestPart("title") String title,
+                                      @RequestPart("tags") String tags,
+                                      @RequestPart("price") String price,
+                                      @RequestPart("description") String description,
+                                      @RequestPart("photo") MultipartFile photo) throws IOException {
+
         Optional<User> userOptional = userRepository.findById(userId);
         User user = null;
         try {
@@ -37,6 +45,8 @@ public class GigController {
         if (user != null) {
             Seller seller = sellerRepository.findByUser(user);
             if (seller != null) {
+                float priceF = Float.parseFloat(price);
+                Gig gig = new Gig(title, tags, priceF, description, photo.getBytes(), seller);
                 gig.setOwner(seller);
                 gigService.saveGig(gig);
                 return ResponseEntity.ok(gig);
