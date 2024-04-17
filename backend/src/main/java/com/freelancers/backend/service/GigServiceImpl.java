@@ -5,6 +5,8 @@ import com.freelancers.backend.repository.GigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GigServiceImpl implements GigService {
     @Autowired
@@ -13,5 +15,10 @@ public class GigServiceImpl implements GigService {
     @Override
     public Gig saveGig(Gig gig) {
         return gigRepository.save(gig);
+    }
+
+    @Override
+    public List<Gig> getGigs() {
+        return gigRepository.findAll();
     }
 }
