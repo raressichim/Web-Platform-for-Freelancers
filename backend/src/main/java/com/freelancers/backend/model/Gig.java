@@ -18,6 +18,7 @@ public class Gig {
     private float price;
     private String description;
     @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] photo;
     @ManyToOne
     @JoinColumn(name = "seller_id")
