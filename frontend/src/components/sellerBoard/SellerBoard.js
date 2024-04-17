@@ -95,6 +95,7 @@ export default function SellerDashboard() {
       formData.append("price", priceText);
       formData.append("description", bioText);
       formData.append("photo", selectedFile);
+
       try {
         const response = await fetch(`${SERVER}/gig/addGig/${userId}`, {
           method: "POST",
@@ -211,6 +212,11 @@ export default function SellerDashboard() {
             ref={fileInputRef}
             onChange={handlePhotoChange}
           />
+          {selectedFile && (
+            <Typography level="body-sm" sx={{ mb: 1 }}>
+              File selected: {fileInputRef.current.files[0].name}
+            </Typography>
+          )}
           <Button
             type="submit"
             fullWidth
@@ -229,7 +235,7 @@ export default function SellerDashboard() {
             }}
             onClick={handleChooseFile}
           >
-            Choose Photo
+            {selectedFile ? "Change Photo" : "Choose Photo"}
           </Button>
         </Card>
         <Card

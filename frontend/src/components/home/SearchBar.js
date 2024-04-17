@@ -18,6 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
+import GigCard from "./GigCard";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,7 +63,7 @@ export default function SearchBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { loggedInUser, logout } = useUser();
   let navigate = useNavigate();
-
+  const [recentGigs, setRecentGigs] = useState([]);
   const [isSeller, setIsSeller] = useState(false);
   const SERVER = "http://localhost:8080";
   useEffect(() => {
@@ -96,6 +97,19 @@ export default function SearchBar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    const fetchRecentGigs = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/gig/getGigs");
+        const data = await response.json();
+        setRecentGigs(data);
+      } catch (error) {
+        console.error("Error fetching recent gigs:", error);
+      }
+    };
+    fetchRecentGigs();
+  }, []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -165,6 +179,7 @@ export default function SearchBar() {
                     width: "160px",
                     margin: "8px",
                   }}
+                  aria-label="Become a seller"
                   sx={{
                     mt: 3,
                     mb: 2,
@@ -186,6 +201,7 @@ export default function SearchBar() {
               <Link to={"/sellerBoard"}>
                 <Button
                   variant="outlined"
+                  aria-label="Switch to selling"
                   style={{
                     height: "30px",
                     width: "170px",
@@ -212,6 +228,7 @@ export default function SearchBar() {
               <Link to={"/login"}>
                 <Button
                   variant="outlined"
+                  aria-label="Log in"
                   style={{
                     height: "30px",
                     width: "110px",
@@ -309,6 +326,11 @@ export default function SearchBar() {
         </Card>
       </Box>
       <Box>Recent gigs</Box>
+      <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        {recentGigs.map((gig) => (
+          <GigCard key={gig.id} title={gig.title} photo={gig.photo} />
+        ))}
+      </Box>
     </Box>
   );
 }
