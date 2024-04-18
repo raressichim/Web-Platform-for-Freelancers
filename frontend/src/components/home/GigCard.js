@@ -12,11 +12,7 @@ export default function GigCard({ title, photo }) {
   const [imageUrl, setImageUrl] = useState("");
   useEffect(() => {
     if (photo) {
-      console.log(photo);
-      const uint8Array = new Uint8Array(photo);
-      const blob = new Blob(uint8Array);
-      URL.createObjectURL(blob);
-      setImageUrl(blob);
+      setImageUrl("data:image/jpeg;base64," + photo);
     }
   }, [photo]);
 

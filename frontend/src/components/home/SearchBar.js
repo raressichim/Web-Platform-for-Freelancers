@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
 import GigCard from "./GigCard";
+import Container from "@mui/material/Container";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -46,6 +47,16 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary">
+      {"Copyright © "}
+      ITFreelancers {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
@@ -59,6 +70,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const Footer = styled("footer")({
+  backgroundColor: "#f5f5f5",
+  color: "#333",
+  textAlign: "center",
+  padding: "20px",
+  position: "sticky",
+  bottom: 0,
+  width: "100%",
+});
+
 export default function SearchBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { loggedInUser, logout } = useUser();
@@ -66,6 +87,7 @@ export default function SearchBar() {
   const [recentGigs, setRecentGigs] = useState([]);
   const [isSeller, setIsSeller] = useState(false);
   const SERVER = "http://localhost:8080";
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -148,7 +170,14 @@ export default function SearchBar() {
   );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        overflow: "hidden",
+      }}
+    >
       <AppBar position="static" sx={{ backgroundColor: "#fff", color: "#000" }}>
         <Toolbar>
           <Typography
@@ -325,11 +354,37 @@ export default function SearchBar() {
           </Typography>
         </Card>
       </Box>
-      <Box>Recent gigs</Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-        {recentGigs.map((gig) => (
-          <GigCard key={gig.id} title={gig.title} photo={gig.photo} />
-        ))}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingTop: "20px", // Add space on top
+          paddingBottom: "20px", // Add space on bottom
+        }}
+      >
+        <Typography variant="h5" sx={{ paddingBottom: "20px" }}>
+          Recent gigs
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
+          {recentGigs.map((gig) => (
+            <GigCard key={gig.id} title={gig.title} photo={gig.photo} />
+          ))}
+        </Box>
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "5vh" }}>
+        <Footer>
+          <Container maxWidth="sm">
+            <Copyright />
+          </Container>
+        </Footer>
       </Box>
     </Box>
   );
