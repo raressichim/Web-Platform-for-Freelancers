@@ -1,8 +1,11 @@
 package com.freelancers.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -20,9 +23,9 @@ public class Gig {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] photo;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id")
-    @JsonIgnore
     private Seller owner;
 
     public Gig(String title, String tags, float price, String description, byte[] photo, Seller owner) {

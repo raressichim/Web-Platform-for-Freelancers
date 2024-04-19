@@ -165,6 +165,14 @@ export default function SearchBar() {
           Profile
         </Link>
       </MenuItem>
+      {isSeller && (
+        <Link
+          to={"/yourGigs"}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <MenuItem>Your gigs</MenuItem>
+        </Link>
+      )}
       <MenuItem onClick={handleLogout}>Log out</MenuItem>
     </Menu>
   );
@@ -359,8 +367,8 @@ export default function SearchBar() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          paddingTop: "20px", // Add space on top
-          paddingBottom: "20px", // Add space on bottom
+          paddingTop: "20px",
+          paddingBottom: "20px",
         }}
       >
         <Typography variant="h5" sx={{ paddingBottom: "20px" }}>
@@ -375,7 +383,12 @@ export default function SearchBar() {
           }}
         >
           {recentGigs.map((gig) => (
-            <GigCard key={gig.id} title={gig.title} photo={gig.photo} />
+            <GigCard
+              key={gig.id}
+              title={gig.title}
+              photo={gig.photo}
+              seller={gig.owner.user.username}
+            />
           ))}
         </Box>
       </Box>

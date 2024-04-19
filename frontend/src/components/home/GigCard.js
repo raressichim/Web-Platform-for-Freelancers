@@ -8,7 +8,7 @@ import Link from "@mui/joy/Link";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import { useEffect, useState } from "react";
 
-export default function GigCard({ title, photo }) {
+export default function GigCard({ title, photo, seller }) {
   const [imageUrl, setImageUrl] = useState("");
   useEffect(() => {
     if (photo) {
@@ -91,7 +91,7 @@ export default function GigCard({ title, photo }) {
           </AspectRatio>
           <Box sx={{ display: "flex", gap: 1.5, mt: "auto" }}>
             <div>
-              <Typography level="body-xs">Designed by</Typography>
+              <Typography level="body-xs">Designed by {seller}</Typography>
             </div>
           </Box>
         </Box>

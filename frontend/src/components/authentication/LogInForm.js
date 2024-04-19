@@ -51,6 +51,7 @@ export default function LogInForm() {
       email: email,
       password: password,
     };
+    console.log(JSON.stringify(userData));
     try {
       const response = await fetch(`${SERVER}/user/login`, {
         method: "post",

@@ -62,4 +62,17 @@ public class GigController {
     public List<Gig> getGigs(){
         return gigService.getGigs();
     }
+
+    @GetMapping("/getYourGigs/{userId}")
+    public List<Gig> getYourGigs(@PathVariable int userId){
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user = null;
+        try {
+            user = userOptional.orElseThrow(() -> new NoSuchElementException("User not found"));
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+        Seller owner = sellerRepository.findByUser(user);
+        return gigService.getYourGigs(owner);
+    }
 }
