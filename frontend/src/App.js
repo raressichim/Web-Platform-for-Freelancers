@@ -7,6 +7,8 @@ import BecomeSeller from "./components/profile/BecomeSeller";
 import UserProfile from "./components/profile/UserProfile";
 import SellerDashboard from "./components/sellerCommands/SellerBoard";
 import YourGigs from "./components/sellerCommands/YourGigs";
+import SellerProfile from "./components/profile/SellerProfile";
+import GigDetailsPage from "./components/Gig/GigDetails";
 
 function App() {
   return (
@@ -20,7 +22,9 @@ function App() {
           <Route path="/becomeSeller" element={<BecomeSeller />}></Route>
           <Route path="/userProfile" element={<UserProfile />}></Route>
           <Route path="/sellerBoard" element={<SellerDashboard />}></Route>
-          <Route path="yourGigs" element={<YourGigs />}></Route>
+          <Route path="/yourGigs" element={<YourGigs />}></Route>
+          <Route path="/gigDetails/:id" element={GigDetailsPage}></Route>
+          <Route path="/sellerProfile" element={<SellerProfile />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

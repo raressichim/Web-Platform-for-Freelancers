@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
-import GigCard from "./GigCard";
+import GigCard from "../Gig/GigCard";
 import Container from "@mui/material/Container";
 
 const Search = styled("div")(({ theme }) => ({
@@ -387,7 +387,7 @@ export default function SearchBar() {
               key={gig.id}
               title={gig.title}
               photo={gig.photo}
-              seller={gig.owner.user.username}
+              seller={gig.owner.user}
             />
           ))}
         </Box>

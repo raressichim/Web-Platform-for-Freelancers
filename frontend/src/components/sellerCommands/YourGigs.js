@@ -5,10 +5,10 @@ import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { Link as ReactRouterLink } from "react-router-dom";
-import GigCard from "../home/GigCard";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import GigCardForSeller from "../Gig/GigCardForSeller";
 
 export default function YourGigs() {
   const [yourGigs, setYourGigs] = useState(null);
@@ -68,11 +68,10 @@ export default function YourGigs() {
       >
         {yourGigs && yourGigs.length > 0 ? (
           yourGigs.map((gig) => (
-            <GigCard
+            <GigCardForSeller
               key={gig.id}
               title={gig.title}
               photo={gig.photo}
-              seller={gig.owner.user.username}
             />
           ))
         ) : (

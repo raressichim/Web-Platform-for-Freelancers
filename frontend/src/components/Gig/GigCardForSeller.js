@@ -2,13 +2,11 @@ import * as React from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import Link from "@mui/joy/Link";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import { useEffect, useState } from "react";
 
-export default function GigCard({ title, photo, seller }) {
+export default function GigCardForSeller({ title, photo }) {
   const [imageUrl, setImageUrl] = useState("");
   useEffect(() => {
     if (photo) {
@@ -69,15 +67,6 @@ export default function GigCard({ title, photo, seller }) {
                 </Link>
               </Typography>
             </div>
-            <IconButton
-              size="sm"
-              variant="plain"
-              color="neutral"
-              title="Add to Favorites"
-              sx={{ ml: "auto", alignSelf: "flex-start" }}
-            >
-              <FavoriteBorderRoundedIcon color="danger" />
-            </IconButton>
           </Box>
           <AspectRatio
             variant="soft"
@@ -89,11 +78,6 @@ export default function GigCard({ title, photo, seller }) {
           >
             <img src={imageUrl} alt="" />
           </AspectRatio>
-          <Box sx={{ display: "flex", gap: 1.5, mt: "auto" }}>
-            <div>
-              <Typography level="body-xs">Designed by {seller}</Typography>
-            </div>
-          </Box>
         </Box>
       </Card>
     </Box>
