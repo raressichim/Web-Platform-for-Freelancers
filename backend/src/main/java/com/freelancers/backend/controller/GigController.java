@@ -3,6 +3,7 @@ package com.freelancers.backend.controller;
 import com.freelancers.backend.model.Gig;
 import com.freelancers.backend.model.Seller;
 import com.freelancers.backend.model.User;
+import com.freelancers.backend.repository.GigRepository;
 import com.freelancers.backend.repository.SellerRepository;
 import com.freelancers.backend.repository.UserRepository;
 import com.freelancers.backend.service.GigService;
@@ -28,6 +29,8 @@ public class GigController {
     private SellerRepository sellerRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GigRepository gigRepository;
 
     @PostMapping(value = "/addGig/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Gig> addGig(@PathVariable int userId, @RequestPart("title") String title,
@@ -58,13 +61,13 @@ public class GigController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping(value="/getGigs")
-    public List<Gig> getGigs(){
+    @GetMapping(value = "/getGigs")
+    public List<Gig> getGigs() {
         return gigService.getGigs();
     }
 
     @GetMapping("/getYourGigs/{userId}")
-    public List<Gig> getYourGigs(@PathVariable int userId){
+    public List<Gig> getYourGigs(@PathVariable int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         User user = null;
         try {
@@ -74,5 +77,10 @@ public class GigController {
         }
         Seller owner = sellerRepository.findByUser(user);
         return gigService.getYourGigs(owner);
+    }
+
+    @GetMapping("/getGig/{gigId}")
+    public Optional<Gig> getGigById(@PathVariable int gigId) {
+        return gigRepository.findById(gigId);
     }
 }

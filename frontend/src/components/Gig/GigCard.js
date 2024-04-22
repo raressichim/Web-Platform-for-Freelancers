@@ -5,17 +5,24 @@ import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
 import Link from "@mui/joy/Link";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function GigCard({ title, photo, seller }) {
+export default function GigCard({ id, title, photo, seller }) {
   const [imageUrl, setImageUrl] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (photo) {
       setImageUrl("data:image/jpeg;base64," + photo);
     }
   }, [photo]);
 
+  const handleClick = () => {
+    navigate(`/gig/${id}`);
+  };
+
   return (
-    <Box sx={{ minHeight: 350 }}>
+    <Box sx={{ minHeight: 350 }} onClick={handleClick}>
       <Card
         variant="outlined"
         sx={(theme) => ({
@@ -52,21 +59,7 @@ export default function GigCard({ title, photo, seller }) {
           }}
         >
           <Box sx={{ display: "flex" }}>
-            <div>
-              <Typography level="title-lg">
-                <Link
-                  href="#container-responsive"
-                  overlay
-                  underline="none"
-                  sx={{
-                    color: "text.primary",
-                    "&.Mui-focusVisible:after": { outlineOffset: "-4px" },
-                  }}
-                >
-                  <Typography>{title}</Typography>
-                </Link>
-              </Typography>
-            </div>
+            <Typography>{title}</Typography>
           </Box>
           <AspectRatio
             variant="soft"

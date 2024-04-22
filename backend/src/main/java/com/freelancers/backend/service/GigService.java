@@ -4,9 +4,13 @@ import com.freelancers.backend.model.Gig;
 import com.freelancers.backend.model.Seller;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GigService {
-    public Gig saveGig(Gig gig);
-    public List<Gig> getGigs();
-    public List<Gig> getYourGigs(Seller owner);
+    Gig saveGig(Gig gig);
+
+    List<Gig> getGigs();
+
+    List<Gig> getYourGigs(Seller owner);
+
 }

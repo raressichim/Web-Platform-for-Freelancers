@@ -8,23 +8,23 @@ import UserProfile from "./components/profile/UserProfile";
 import SellerDashboard from "./components/sellerCommands/SellerBoard";
 import YourGigs from "./components/sellerCommands/YourGigs";
 import SellerProfile from "./components/profile/SellerProfile";
-import GigDetailsPage from "./components/Gig/GigDetails";
+import GigDetails from "./components/Gig/GigDetails";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SearchBar />}></Route>
-          <Route path="/login" element={<LogInForm />}></Route>
-          <Route path="/signup" element={<SignUpForm />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/becomeSeller" element={<BecomeSeller />}></Route>
-          <Route path="/userProfile" element={<UserProfile />}></Route>
-          <Route path="/sellerBoard" element={<SellerDashboard />}></Route>
+          <Route path="/" element={<SearchBar />} />
+          <Route path="/login" element={<LogInForm />} />
+          <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/becomeSeller" element={<BecomeSeller />} />
+          <Route path="/userProfile" element={<UserProfile />} />
+          <Route path="/sellerBoard" element={<SellerDashboard />} />
           <Route path="/yourGigs" element={<YourGigs />}></Route>
-          <Route path="/gigDetails/:id" element={GigDetailsPage}></Route>
-          <Route path="/sellerProfile" element={<SellerProfile />}></Route>
+          <Route path="/sellerProfile" element={<SellerProfile />} />
+          <Route path="/gig/:gigId" element={<GigDetails />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -241,7 +241,7 @@ export default function SearchBar() {
                   aria-label="Switch to selling"
                   style={{
                     height: "30px",
-                    width: "170px",
+                    width: "180px",
                     margin: "8px",
                   }}
                   sx={{
@@ -388,6 +388,7 @@ export default function SearchBar() {
               title={gig.title}
               photo={gig.photo}
               seller={gig.owner.user}
+              id={gig.id}
             />
           ))}
         </Box>

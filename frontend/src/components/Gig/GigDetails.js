@@ -1,38 +1,102 @@
 import React from "react";
-import { makeStyles } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
+import { Box, Grid, Typography, Button, CardMedia, Paper } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-  image: {
-    maxWidth: "100%",
-    height: "auto",
-  },
-}));
+const GigDetails = () => {
+  const { gigId } = useParams();
+  const [gig, setGig] = useState(null);
 
-const GigDetailsPage = ({ gig }) => {
-  const classes = useStyles();
+  useEffect(() => {
+    const fetchGigDetails = async () => {
+      const response = await fetch(`http://localhost:8080/gig/getGig/${gigId}`);
+      const data = await response.json();
+      setGig(data);
+    };
+
+    fetchGigDetails();
+  }, [gigId]);
+
+  if (!gig) {
+    return <div>Loading...</div>;
+  }
+
+  const imageSrc = "data:image/jpeg;base64," + gig.photo;
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <img src={gig.photo} alt={gig.title} className={classes.image} />
+    <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+      <Breadcrumbs
+        size="sm"
+        aria-label="breadcrumbs"
+        separator={<ChevronRightRoundedIcon fontSize="sm" />}
+        sx={{ mb: 2 }}
+      >
+        <Link to="/" style={{ display: "flex", alignItems: "center" }}>
+          <HomeRoundedIcon />
+        </Link>
+        <Typography color="text.primary" fontWeight={500}>
+          Gig Details
+        </Typography>
+      </Breadcrumbs>
+      <Grid container spacing={4} sx={{ px: 4 }}>
+        <Grid item xs={12} md={6}>
+          <CardMedia
+            component="img"
+            sx={{ width: "100%", height: "auto", borderRadius: 2 }}
+            image={imageSrc}
+            alt={gig.title}
+          />
         </Grid>
-        <Grid item xs={12} sm={6} container direction="column" justify="center">
-          <Typography variant="h4" gutterBottom>
-            {gig.title}
+        <Grid
+          item
+          xs={12}
+          md={6}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box>
+            <Typography variant="h4" gutterBottom>
+              {gig.title}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
+              Offered by {gig.owner?.user?.username}
+            </Typography>
+            <Typography gutterBottom sx={{ my: 2 }}>
+              {gig.owner?.description}
+            </Typography>
+            <Typography variant="h5" color="secondary" gutterBottom>
+              ${gig.price}
+            </Typography>
+          </Box>
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{ mr: 2 }}
+            >
+              Add To Cart
+            </Button>
+            <Button variant="outlined" color="primary" size="large">
+              Contact
+            </Button>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom>
+            About this gig
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            {gig.description}
-          </Typography>
+          <Typography>{gig.description}</Typography>
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 };
 
-export default GigDetailsPage;
+export default GigDetails;
