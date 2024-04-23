@@ -3,7 +3,6 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
-import Link from "@mui/joy/Link";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

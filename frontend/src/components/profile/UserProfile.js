@@ -11,6 +11,8 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 
+import Footer from "../footer/Footer";
+
 export default function Profile() {
   const { loggedInUser } = useUser();
 
@@ -102,6 +104,7 @@ export default function Profile() {
           </Stack>
         </Card>
       </Stack>
+      <Footer />
     </Box>
   );
 }

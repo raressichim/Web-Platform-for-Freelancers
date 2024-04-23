@@ -3,7 +3,6 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
-import Link from "@mui/joy/Link";
 import { useEffect, useState } from "react";
 
 export default function GigCardForSeller({ title, photo }) {
@@ -54,17 +53,7 @@ export default function GigCardForSeller({ title, photo }) {
           <Box sx={{ display: "flex" }}>
             <div>
               <Typography level="title-lg">
-                <Link
-                  href="#container-responsive"
-                  overlay
-                  underline="none"
-                  sx={{
-                    color: "text.primary",
-                    "&.Mui-focusVisible:after": { outlineOffset: "-4px" },
-                  }}
-                >
-                  <Typography>{title}</Typography>
-                </Link>
+                <Typography>{title}</Typography>
               </Typography>
             </div>
           </Box>

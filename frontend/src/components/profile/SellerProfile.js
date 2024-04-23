@@ -10,26 +10,30 @@ import Card from "@mui/joy/Card";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import { Link as ReactRouterLink, useLocation } from "react-router-dom";
+import { Link as ReactRouterLink, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
+import Footer from "../footer/Footer";
 
 export default function SellerProfile() {
   const [bioText, setBioText] = useState("");
   const [educationText, setEducationText] = useState("");
   const [skillsText, setSkillsText] = useState("");
+  const [seller, setSeller] = useState("");
   const SERVER = "http://localhost:8080";
-  const state = useLocation();
-  const seller = state?.seller || {};
+  const param = useParams();
+  const sellerId = param.sellerId;
 
   useEffect(() => {
     const fetchSellerData = async () => {
       try {
-        const response = await fetch(`${SERVER}/seller/getSeller/${seller.id}`);
+        const response = await fetch(`${SERVER}/seller/getSeller/${sellerId}`);
         if (response.ok) {
           const data = await response.json();
           setBioText(data.description);
           setEducationText(data.education);
           setSkillsText(data.skills);
+          setSeller(data);
         } else {
           console.log("Failed to fetch seller data");
         }
@@ -39,7 +43,7 @@ export default function SellerProfile() {
     };
 
     fetchSellerData();
-  }, [seller.id]);
+  }, [sellerId]);
 
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
@@ -96,15 +100,15 @@ export default function SellerProfile() {
           >
             <Stack spacing={1} sx={{ flexGrow: 1 }}>
               <FormLabel>Name</FormLabel>
-              <Typography>{seller ? seller.name : ""}</Typography>
+              <Typography>{seller ? seller.user.name : ""}</Typography>
             </Stack>
             <Stack spacing={1} sx={{ flexGrow: 1 }}>
               <FormLabel>Username</FormLabel>
-              <Typography>{seller ? seller.username : ""}</Typography>
+              <Typography>{seller ? seller.user.username : ""}</Typography>
             </Stack>
             <Stack spacing={1} sx={{ flexGrow: 1 }}>
               <FormLabel>Email</FormLabel>
-              <Typography>{seller ? seller.email : ""}</Typography>
+              <Typography>{seller ? seller.user.email : ""}</Typography>
             </Stack>
           </Stack>
         </Card>
@@ -177,6 +181,7 @@ export default function SellerProfile() {
           </Stack>
         </Card>
       </Stack>
+      <Footer />
     </Box>
   );
 }

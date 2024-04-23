@@ -23,7 +23,7 @@ function App() {
           <Route path="/userProfile" element={<UserProfile />} />
           <Route path="/sellerBoard" element={<SellerDashboard />} />
           <Route path="/yourGigs" element={<YourGigs />}></Route>
-          <Route path="/sellerProfile" element={<SellerProfile />} />
+          <Route path="/sellerProfile/:sellerId" element={<SellerProfile />} />
           <Route path="/gig/:gigId" element={<GigDetails />} />
         </Routes>
       </BrowserRouter>

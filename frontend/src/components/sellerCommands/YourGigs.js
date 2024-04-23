@@ -9,13 +9,14 @@ import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import GigCardForSeller from "../Gig/GigCardForSeller";
+import Footer from "../footer/Footer";
 
 export default function YourGigs() {
   const [yourGigs, setYourGigs] = useState(null);
   const { loggedInUser } = useUser();
 
   useEffect(() => {
-    const fetchRecentGigs = async () => {
+    const fetchGigs = async () => {
       try {
         const response = await fetch(
           `http://localhost:8080/gig/getYourGigs/${loggedInUser.id}`
@@ -26,7 +27,7 @@ export default function YourGigs() {
         console.error("Error fetching recent gigs:", error);
       }
     };
-    fetchRecentGigs();
+    fetchGigs();
   });
 
   return (
@@ -64,6 +65,7 @@ export default function YourGigs() {
           flexWrap: "wrap",
           justifyContent: "center",
           gap: "20px",
+          height: "76vh",
         }}
       >
         {yourGigs && yourGigs.length > 0 ? (
@@ -93,6 +95,9 @@ export default function YourGigs() {
             </Box>
           </ReactRouterLink>
         )}
+      </Box>
+      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "5vh" }}>
+        <Footer />
       </Box>
     </Box>
   );

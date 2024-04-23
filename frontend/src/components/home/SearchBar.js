@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
 import GigCard from "../Gig/GigCard";
-import Container from "@mui/material/Container";
+import Footer from "../footer/Footer";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -47,16 +47,6 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary">
-      {"Copyright © "}
-      ITFreelancers {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
@@ -69,16 +59,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
-const Footer = styled("footer")({
-  backgroundColor: "#f5f5f5",
-  color: "#333",
-  textAlign: "center",
-  padding: "20px",
-  position: "sticky",
-  bottom: 0,
-  width: "100%",
-});
 
 export default function SearchBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -394,11 +374,7 @@ export default function SearchBar() {
         </Box>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column", minHeight: "5vh" }}>
-        <Footer>
-          <Container maxWidth="sm">
-            <Copyright />
-          </Container>
-        </Footer>
+        <Footer />
       </Box>
     </Box>
   );

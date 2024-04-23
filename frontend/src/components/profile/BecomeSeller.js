@@ -18,6 +18,8 @@ import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import Footer from "../footer/Footer";
+
 export default function Profile() {
   const { loggedInUser } = useUser();
   const [bioLength, setBioLength] = useState(null);
@@ -295,6 +297,7 @@ export default function Profile() {
           </CardOverflow>
         </Card>
       </Stack>
+      <Footer />
     </Box>
   );
 }

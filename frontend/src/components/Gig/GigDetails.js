@@ -1,14 +1,31 @@
 import React from "react";
-import { Box, Grid, Typography, Button, CardMedia, Paper } from "@mui/material";
+import { Box, Grid, Typography, Button, CardMedia } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import GigCard from "./GigCard";
+import Footer from "../footer/Footer";
 
 const GigDetails = () => {
   const { gigId } = useParams();
+  const [yourGigs, setYourGigs] = useState(null);
   const [gig, setGig] = useState(null);
+  const [recentGigs, setRecentGigs] = useState(null);
+
+  useEffect(() => {
+    const fetchRecentGigs = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/gig/getGigs");
+        const data = await response.json();
+        setRecentGigs(data);
+      } catch (error) {
+        console.error("Error fetching recent gigs:", error);
+      }
+    };
+    fetchRecentGigs();
+  }, []);
 
   useEffect(() => {
     const fetchGigDetails = async () => {
@@ -19,6 +36,26 @@ const GigDetails = () => {
 
     fetchGigDetails();
   }, [gigId]);
+
+  useEffect(() => {
+    const fetchGigs = async () => {
+      if (gig && gig.owner && gig.owner.user) {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/gig/getYourGigs/${gig.owner.user.id}`
+          );
+          const data = await response.json();
+          setYourGigs(data);
+        } catch (error) {
+          console.error("Error fetching recent gigs:", error);
+        }
+      }
+    };
+
+    if (gig) {
+      fetchGigs();
+    }
+  }, [gig]);
 
   if (!gig) {
     return <div>Loading...</div>;
@@ -65,13 +102,19 @@ const GigDetails = () => {
               {gig.title}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
-              Offered by {gig.owner?.user?.username}
+              Offered by{" "}
+              <Link
+                to={`/sellerProfile/${gig.owner?.user?.id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                {gig.owner?.user?.username}
+              </Link>
             </Typography>
             <Typography gutterBottom sx={{ my: 2 }}>
               {gig.owner?.description}
             </Typography>
             <Typography variant="h5" color="secondary" gutterBottom>
-              ${gig.price}
+              Starts from ${gig.price} depending on your requirements
             </Typography>
           </Box>
           <Box>
@@ -83,6 +126,7 @@ const GigDetails = () => {
             >
               Add To Cart
             </Button>
+
             <Button variant="outlined" color="primary" size="large">
               Contact
             </Button>
@@ -94,7 +138,63 @@ const GigDetails = () => {
           </Typography>
           <Typography>{gig.description}</Typography>
         </Grid>
+        <Grid item xs={12}>
+          {yourGigs && yourGigs.length > 1 ? (
+            <>
+              <Typography>
+                See other gigs from {gig.owner?.user?.username}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "20px",
+                }}
+              >
+                {yourGigs
+                  .filter((otherGig) => gig.id !== otherGig.id)
+                  .map((otherGig) => (
+                    <GigCard
+                      key={otherGig.id}
+                      title={otherGig.title}
+                      photo={otherGig.photo}
+                      seller={otherGig.owner.user}
+                      id={otherGig.id}
+                    />
+                  ))}
+              </Box>
+            </>
+          ) : recentGigs ? (
+            <>
+              <Typography>Check other gigs</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "20px",
+                }}
+              >
+                {recentGigs
+                  .filter((otherGig) => gig && gig.id !== otherGig.id)
+                  .map((otherGig) => (
+                    <GigCard
+                      key={otherGig.id}
+                      title={otherGig.title}
+                      photo={otherGig.photo}
+                      seller={otherGig.owner.user}
+                      id={otherGig.id}
+                    />
+                  ))}
+              </Box>
+            </>
+          ) : (
+            <Typography>Loading other gigs...</Typography>
+          )}
+        </Grid>
       </Grid>
+      <Footer />
     </Box>
   );
 };

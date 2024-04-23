@@ -18,6 +18,8 @@ import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 
+import Footer from "../footer/Footer";
+
 export default function SellerDashboard() {
   const { loggedInUser } = useUser();
   const [titleLength, setTitleLength] = useState(null);
@@ -404,6 +406,7 @@ export default function SellerDashboard() {
           </CardOverflow>
         </Card>
       </Stack>
+      <Footer />
     </Box>
   );
 }
