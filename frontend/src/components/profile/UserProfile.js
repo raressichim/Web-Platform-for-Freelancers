@@ -53,6 +53,7 @@ export default function Profile() {
           mx: "auto",
           px: { xs: 2, md: 6 },
           py: { xs: 2, md: 3 },
+          height: "73vh",
         }}
       >
         <Card

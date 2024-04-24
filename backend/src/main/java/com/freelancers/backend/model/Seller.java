@@ -18,6 +18,7 @@ public class Seller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(length = 1000)
     private String description;
     private String education;
     private String skills;

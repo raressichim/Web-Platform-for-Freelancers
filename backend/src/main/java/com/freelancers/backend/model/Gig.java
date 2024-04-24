@@ -1,6 +1,5 @@
 package com.freelancers.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +18,7 @@ public class Gig {
     private String title;
     private String tags;
     private float price;
+    @Column(length = 1000)
     private String description;
     @Lob
     @Column(columnDefinition = "LONGBLOB")
