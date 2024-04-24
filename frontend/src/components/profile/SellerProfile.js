@@ -129,7 +129,14 @@ export default function SellerProfile() {
           </Box>
           <Divider />
           <Stack spacing={2} sx={{ my: 1 }}>
-            <Textarea size="sm" minRows={4} sx={{ mt: 1.5 }} value={bioText} />
+            <Textarea
+              size="sm"
+              minRows={4}
+              sx={{ mt: 1.5 }}
+              a
+              value={bioText}
+              readOnly
+            />
           </Stack>
         </Card>
         <Card
@@ -153,6 +160,7 @@ export default function SellerProfile() {
               minRows={4}
               sx={{ mt: 1.5 }}
               value={educationText}
+              readOnly
             />
           </Stack>
         </Card>
@@ -177,6 +185,7 @@ export default function SellerProfile() {
               minRows={4}
               sx={{ mt: 1.5 }}
               value={skillsText}
+              readOnly
             />
           </Stack>
         </Card>

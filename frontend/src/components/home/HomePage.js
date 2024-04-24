@@ -60,7 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchBar() {
+export default function HomePage() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { loggedInUser, logout } = useUser();
   let navigate = useNavigate();

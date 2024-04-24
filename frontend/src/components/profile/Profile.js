@@ -57,7 +57,7 @@ export default function Profile() {
   const handleBioChange = (event) => {
     const newText = event.target.value;
     setBioText(newText);
-    setBioLength(500 - newText.length);
+    setBioLength(1000 - newText.length);
   };
 
   const handleEducationChange = (event) => {
@@ -214,7 +214,7 @@ export default function Profile() {
               onChange={handleBioChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              {!bioLength && <p>500 characters left</p>}
+              {!bioLength && <p>1000 characters left</p>}
               {bioLength >= 0 && <p>{bioLength} characters left</p>}
               {bioLength < 0 && (
                 <p style={{ color: "red" }}>Maximum characters limit reached</p>

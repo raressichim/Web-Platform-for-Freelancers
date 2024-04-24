@@ -14,6 +14,9 @@ import CardOverflow from "@mui/joy/CardOverflow";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import CloseIcon from "@mui/icons-material/Close";
+import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
 import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
@@ -26,14 +29,30 @@ export default function SellerDashboard() {
   const [titleText, setTitleText] = useState("");
   const [bioLength, setBioLength] = useState(null);
   const [bioText, setBioText] = useState("");
-  const [tagsLength, setTagsLength] = useState(null);
-  const [tagsText, setTagsText] = useState("");
   const [priceLength, setPriceLength] = useState(null);
   const [priceText, setPriceText] = useState("");
   const [error, setError] = useState(null);
   const [isClicked, setIsClicked] = useState(null);
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+
+  const handleAddTag = () => {
+    if (tagInput && !tags.includes(tagInput)) {
+      setTags([...tags, tagInput]);
+      setTagInput("");
+    }
+  };
+
+  const handleDeleteTag = (tagToDelete) => {
+    setTags(tags.filter((tag) => tag !== tagToDelete));
+  };
+
+  const handleTagInputChange = (event) => {
+    setTagInput(event.target.value);
+  };
 
   const handleTitleChange = (event) => {
     const newText = event.target.value;
@@ -44,13 +63,7 @@ export default function SellerDashboard() {
   const handleBioChange = (event) => {
     const newText = event.target.value;
     setBioText(newText);
-    setBioLength(500 - newText.length);
-  };
-
-  const handleTagsChange = (event) => {
-    const newText = event.target.value;
-    setTagsText(newText);
-    setTagsLength(350 - newText.length);
+    setBioLength(1000 - newText.length);
   };
 
   const handlePriceChange = (event) => {
@@ -61,7 +74,6 @@ export default function SellerDashboard() {
 
   const handlePhotoChange = () => {
     const file = fileInputRef.current.files[0];
-    console.log("Selected file:", file);
     setSelectedFile(file);
   };
 
@@ -71,6 +83,7 @@ export default function SellerDashboard() {
   const SERVER = "http://localhost:8080";
   const userId = loggedInUser.id;
   let navigate = useNavigate();
+
   const handleSave = async (event) => {
     const price = parseFloat(priceText);
     if (isNaN(price)) {
@@ -81,11 +94,10 @@ export default function SellerDashboard() {
     if (
       titleText.length <= 0 ||
       bioText.length <= 0 ||
-      tagsText <= 0 ||
+      tags.length === 0 ||
       priceText <= 0 ||
       titleText == null ||
       bioText == null ||
-      tagsText == null ||
       priceText == null
     ) {
       setError("All the fields must be completed");
@@ -93,7 +105,7 @@ export default function SellerDashboard() {
     } else {
       const formData = new FormData();
       formData.append("title", titleText);
-      formData.append("tags", tagsText);
+      formData.append("tags", tags.join(","));
       formData.append("price", priceText);
       formData.append("description", bioText);
       formData.append("photo", selectedFile);
@@ -201,7 +213,7 @@ export default function SellerDashboard() {
         >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
-              <span style={{ color: "red" }}>*</span> Title
+              <span style={{ color: "red" }}>*</span> Photo
             </Typography>
             <Typography level="body-sm">
               Upload a photo to be displayed on your gig's card.
@@ -286,7 +298,7 @@ export default function SellerDashboard() {
               <span style={{ color: "red" }}>*</span> Description
             </Typography>
             <Typography level="body-sm">
-              Write a short introduction of your new service.
+              Write a introduction of your new service.
             </Typography>
           </Box>
           <Divider />
@@ -300,7 +312,7 @@ export default function SellerDashboard() {
               onChange={handleBioChange}
             />
             <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              {!bioLength && <p>500 characters left</p>}
+              {!bioLength && <p>1000 characters left</p>}
               {bioLength >= 0 && <p>{bioLength} characters left</p>}
               {bioLength < 0 && (
                 <p style={{ color: "red" }}>Maximum characters limit reached</p>
@@ -318,7 +330,6 @@ export default function SellerDashboard() {
         >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
-              {" "}
               <span style={{ color: "red" }}>*</span>Tags
             </Typography>
             <Typography level="body-sm">
@@ -328,21 +339,43 @@ export default function SellerDashboard() {
           </Box>
           <Divider />
           <Stack spacing={2} sx={{ my: 1 }}>
-            <Textarea
-              size="sm"
-              minRows={4}
-              sx={{ mt: 1.5 }}
-              placeholder="Example: Web Developing, Java, React, etc."
-              value={tagsText}
-              onChange={handleTagsChange}
-            />
-            <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-              {!tagsLength && <p>350 characters left</p>}
-              {tagsLength >= 0 && <p>{tagsLength} characters left</p>}
-              {tagsLength < 0 && (
-                <p style={{ color: "red" }}>Maximum characters limit reached</p>
-              )}
-            </FormHelperText>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {tags.map((tag, index) => (
+                <Chip
+                  key={index}
+                  label={tag}
+                  onDelete={() => handleDeleteTag(tag)}
+                  deleteIcon={<CloseIcon />}
+                  variant="outlined"
+                />
+              ))}
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <TextField
+                size="sm"
+                sx={{ mt: 1.5 }}
+                placeholder="Add a tag"
+                value={tagInput}
+                onChange={handleTagInputChange}
+              />
+              <Button
+                sx={{
+                  ml: 1,
+                  mt: 1.5,
+                  color: "white",
+                  borderColor: "white",
+                  backgroundColor: "black",
+                  transition: "background-color 0.3s, color 0.3s",
+                  "&:hover": {
+                    backgroundColor: "grey",
+                    color: "black",
+                  },
+                }}
+                onClick={handleAddTag}
+              >
+                Add
+              </Button>
+            </Box>
           </Stack>
         </Card>
         <Card

@@ -1,4 +1,4 @@
-import SearchBar from "./components/home/SearchBar";
+import HomePage from "./components/home/HomePage";
 import LogInForm from "./components/authentication/LogInForm";
 import SignUpForm from "./components/authentication/SignUpForm";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -15,7 +15,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SearchBar />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LogInForm />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<Profile />} />
