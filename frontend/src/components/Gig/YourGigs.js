@@ -8,7 +8,7 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
-import GigCardForSeller from "../Gig/GigCardForSeller";
+import GigCardForSeller from "./GigCardForSeller";
 import Footer from "../footer/Footer";
 
 export default function YourGigs() {
@@ -31,7 +31,7 @@ export default function YourGigs() {
   });
 
   return (
-    <Box sx={{ flex: 1, width: "100%" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Box
         sx={{
           position: "sticky",
@@ -61,11 +61,13 @@ export default function YourGigs() {
       </Box>
       <Box
         sx={{
+          flex: 1,
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
           gap: "20px",
-          height: "76vh",
+          marginBottom: "0.5rem",
+          overflow: "auto",
         }}
       >
         {yourGigs && yourGigs.length > 0 ? (
@@ -74,6 +76,7 @@ export default function YourGigs() {
               key={gig.id}
               title={gig.title}
               photo={gig.photo}
+              id={gig.id}
             />
           ))
         ) : (
@@ -96,9 +99,7 @@ export default function YourGigs() {
           </ReactRouterLink>
         )}
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "5vh" }}>
-        <Footer />
-      </Box>
+      <Footer />
     </Box>
   );
 }

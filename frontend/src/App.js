@@ -5,10 +5,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Profile from "./components/profile/Profile";
 import BecomeSeller from "./components/profile/BecomeSeller";
 import UserProfile from "./components/profile/UserProfile";
-import SellerDashboard from "./components/sellerCommands/SellerBoard";
-import YourGigs from "./components/sellerCommands/YourGigs";
+import SellerDashboard from "./components/Gig/SellerBoard";
+import YourGigs from "./components/Gig/YourGigs";
 import SellerProfile from "./components/profile/SellerProfile";
 import GigDetails from "./components/Gig/GigDetails";
+import GigUpdateView from "./components/Gig/GigUpdateView";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/yourGigs" element={<YourGigs />}></Route>
           <Route path="/sellerProfile/:sellerId" element={<SellerProfile />} />
           <Route path="/gig/:gigId" element={<GigDetails />} />
+          <Route path="gigUpdate/:gigId" element={<GigUpdateView />} />
         </Routes>
       </BrowserRouter>
     </div>

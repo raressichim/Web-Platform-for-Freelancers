@@ -4,17 +4,23 @@ import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import Typography from "@mui/joy/Typography";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function GigCardForSeller({ title, photo }) {
+export default function GigCardForSeller({ title, photo, id }) {
   const [imageUrl, setImageUrl] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     if (photo) {
       setImageUrl("data:image/jpeg;base64," + photo);
     }
   }, [photo]);
 
+  const handleClick = () => {
+    navigate(`/gigUpdate/${id}`);
+  };
+
   return (
-    <Box sx={{ minHeight: 350 }}>
+    <Box sx={{ minHeight: 350 }} onClick={handleClick}>
       <Card
         variant="outlined"
         sx={(theme) => ({

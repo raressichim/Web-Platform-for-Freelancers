@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
@@ -83,4 +81,27 @@ public class GigController {
     public Optional<Gig> getGigById(@PathVariable int gigId) {
         return gigRepository.findById(gigId);
     }
+
+    @PutMapping("/update/{gigId}")
+    public ResponseEntity<Gig> updateSeller(@PathVariable int gigId, @RequestPart("title") String title,
+                                            @RequestPart("tags") String tags,
+                                            @RequestPart("price") String price,
+                                            @RequestPart("description") String description,
+                                            @RequestPart(value = "photo",required = false) MultipartFile photo) throws IOException {
+        Optional<Gig> gigOptional = gigRepository.findById(gigId);
+        if (gigOptional.isPresent()) {
+                Gig gig = gigOptional.get();
+                gig.setTitle(title);
+                if(photo!=null) {
+                    gig.setPhoto(photo.getBytes());
+                }
+                gig.setDescription(description);
+                gig.setTags(tags);
+                gig.setPrice(Float.parseFloat(price));
+                gigRepository.save(gig);
+                return ResponseEntity.ok(gig);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
 }
