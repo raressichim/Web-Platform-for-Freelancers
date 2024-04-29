@@ -104,4 +104,17 @@ public class GigController {
                 return ResponseEntity.notFound().build();
             }
         }
+
+    @GetMapping("/search")
+    public List<Gig> searchGigsByTags(@RequestParam String tags) {
+        List<String> tagList = Arrays.stream(tags.split(","))
+                .map(String::trim)
+                .toList();
+        Set<Gig> resultGigs = new HashSet<>();
+        for (String s : tagList) {
+            List<Gig> searchResult = gigRepository.findByTag(s);
+            resultGigs.addAll(searchResult);
+        }
+        return resultGigs.stream().toList();
+    }
 }
