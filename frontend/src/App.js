@@ -10,6 +10,7 @@ import YourGigs from "./components/Gig/YourGigs";
 import SellerProfile from "./components/profile/SellerProfile";
 import GigDetails from "./components/Gig/GigDetails";
 import GigUpdateView from "./components/Gig/GigUpdateView";
+import SearchResult from "./components/search/SearchResult";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/sellerProfile/:sellerId" element={<SellerProfile />} />
           <Route path="/gig/:gigId" element={<GigDetails />} />
           <Route path="gigUpdate/:gigId" element={<GigUpdateView />} />
+          <Route path="searchResults" element={<SearchResult />} />
         </Routes>
       </BrowserRouter>
     </div>

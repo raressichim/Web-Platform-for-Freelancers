@@ -54,12 +54,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
 export default function Searchbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { loggedInUser, logout } = useUser();
   const [isSeller, setIsSeller] = useState(false);
   const SERVER = "http://localhost:8080";
   const navigate = useNavigate();
+
+  const onSearch = async (event) => {
+    if (event.key === "Enter") {
+      const searchValue = event.target.value;
+      if (!searchValue.trim()) return; // Prevent empty search queries
+
+      try {
+        const response = await fetch(
+          `${SERVER}/gig/search?tags=${encodeURIComponent(searchValue)}`
+        );
+        const data = await response.json();
+
+        navigate("/searchResults", { state: { gigs: data } });
+      } catch (error) {
+        console.error("Error during search:", error);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -155,6 +174,7 @@ export default function Searchbar() {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
+            onKeyDown={onSearch}
           />
         </Search>
         <Box sx={{ flexGrow: 1 }} />

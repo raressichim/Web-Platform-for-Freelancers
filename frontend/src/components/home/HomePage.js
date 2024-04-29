@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
 import GigCard from "../Gig/GigCard";
 import Footer from "../footer/Footer";
-import Searchbar from "./SearchBar";
+import Searchbar from "../search/SearchBar";
 
 export default function HomePage() {
   const [recentGigs, setRecentGigs] = useState([]);
