@@ -17,7 +17,8 @@ export default function HomePage() {
       try {
         const response = await fetch("http://localhost:8080/gig/getGigs");
         const data = await response.json();
-        setRecentGigs(data);
+        const sorted = data.sort((a, b) => b.id - a.id).slice(0, 8);
+        setRecentGigs(sorted);
       } catch (error) {
         console.error("Error fetching recent gigs:", error);
       }

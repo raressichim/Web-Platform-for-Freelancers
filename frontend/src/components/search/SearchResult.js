@@ -95,15 +95,81 @@ const SearchResults = () => {
             </Box>
           </Box>
         )}
-        {gigs.map((gig) => (
-          <GigCard
-            key={gig.id}
-            title={gig.title}
-            photo={gig.photo}
-            seller={gig.owner.user}
-            id={gig.id}
-          />
-        ))}
+        {gigs.length >= 4 && (
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "20px",
+            }}
+          >
+            {gigs.map((gig) => (
+              <GigCard
+                key={gig.id}
+                title={gig.title}
+                photo={gig.photo}
+                seller={gig.owner.user}
+                id={gig.id}
+              />
+            ))}
+          </Box>
+        )}
+        :
+        {gigs.length && (
+          <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "20px",
+              }}
+            >
+              {gigs.map((gig) => (
+                <GigCard
+                  key={gig.id}
+                  title={gig.title}
+                  photo={gig.photo}
+                  seller={gig.owner.user}
+                  id={gig.id}
+                />
+              ))}
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 2,
+                mb: 4,
+              }}
+            >
+              <Typography>See other gigs</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "20px",
+              }}
+            >
+              {allGigs
+                .filter((gig) => !gigs.some((g) => g.id === gig.id))
+                .map((gig) => (
+                  <GigCard
+                    key={gig.id}
+                    title={gig.title}
+                    photo={gig.photo}
+                    seller={gig.owner.user}
+                    id={gig.id}
+                  />
+                ))}
+            </Box>
+          </Box>
+        )}
       </Box>
       <Footer />
     </Box>

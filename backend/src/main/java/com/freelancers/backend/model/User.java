@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -25,4 +27,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Seller seller;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "client")
+    @JsonIgnore
+    private List<OrderRecord> orders;
 }

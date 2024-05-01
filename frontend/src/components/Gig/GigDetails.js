@@ -7,12 +7,57 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import GigCard from "./GigCard";
 import Footer from "../footer/Footer";
+import PopUp from "./DescPopUp";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const GigDetails = () => {
   const { gigId } = useParams();
   const [yourGigs, setYourGigs] = useState(null);
   const [gig, setGig] = useState(null);
   const [recentGigs, setRecentGigs] = useState(null);
+  const [isPopUpOpen, setPopUpOpen] = useState(false);
+  const [orderData, setOrderData] = useState({});
+  const navigate = useNavigate();
+  const { loggedInUser } = useUser();
+  const SERVER = "http://localhost:8080";
+
+  const handleBuyClick = () => {
+    document.body.style.overflow = "hidden";
+    setPopUpOpen(true);
+  };
+
+  const handleClose = () => {
+    document.body.style.overflow = "unset";
+    setPopUpOpen(false);
+  };
+
+  const handlePay = async (description) => {
+    const updatedOrderData = {
+      ...orderData,
+      description: description,
+    };
+
+    try {
+      const response = await fetch(`${SERVER}/order/addOrder`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedOrderData),
+      });
+
+      if (response.ok) {
+        navigate("/");
+      } else {
+        throw new Error("Failed to place the order");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      handleClose();
+    }
+  };
 
   useEffect(() => {
     const fetchRecentGigs = async () => {
@@ -32,10 +77,17 @@ const GigDetails = () => {
       const response = await fetch(`http://localhost:8080/gig/getGig/${gigId}`);
       const data = await response.json();
       setGig(data);
+      if (response.ok) {
+        setOrderData({
+          description: "",
+          seller: data.owner,
+          client: loggedInUser,
+        });
+      }
     };
 
     fetchGigDetails();
-  }, [gigId]);
+  }, [gigId, loggedInUser]);
 
   useEffect(() => {
     const fetchGigs = async () => {
@@ -114,23 +166,40 @@ const GigDetails = () => {
               {gig.owner?.description}
             </Typography>
             <Typography variant="h5" color="secondary" gutterBottom>
-              Starts from ${gig.price} depending on your requirements
+              ${gig.price}
+            </Typography>
+            <Typography>
+              Contact info: <br /> email: {gig.owner.user.email}
             </Typography>
           </Box>
-          <Box>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              sx={{ mr: 2 }}
-            >
-              Add To Cart
-            </Button>
-
-            <Button variant="outlined" color="primary" size="large">
-              Contact
-            </Button>
-          </Box>
+          {loggedInUser.id !== gig.owner.user.id && (
+            <Box>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleBuyClick}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  color: "white",
+                  borderColor: "#000",
+                  backgroundColor: "black",
+                  transition: "background-color 0.3s, color 0.3s",
+                  "&:hover": {
+                    backgroundColor: "white",
+                    color: "black",
+                  },
+                }}
+              >
+                Buy service
+              </Button>
+              <PopUp
+                open={isPopUpOpen}
+                onClose={handleClose}
+                onSubmit={handlePay}
+              />
+            </Box>
+          )}
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" gutterBottom>
@@ -150,6 +219,7 @@ const GigDetails = () => {
                   flexWrap: "wrap",
                   justifyContent: "center",
                   gap: "20px",
+                  mt: 2,
                 }}
               >
                 {yourGigs

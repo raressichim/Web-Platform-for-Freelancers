@@ -10,7 +10,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -129,11 +128,9 @@ export default function Searchbar() {
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
       MenuListProps={{ onMouseLeave: handleMenuClose }}
-      PaperProps={{
-        style: {
-          marginTop: "8px",
-          marginLeft: "14px",
-        },
+      sx={{
+        marginTop: "8px",
+        marginLeft: "14px",
       }}
     >
       <MenuItem onClick={handleMenuClose}>
@@ -261,24 +258,6 @@ export default function Searchbar() {
             </Link>
           )}
 
-          {loggedInUser && (
-            <IconButton
-              size="large"
-              aria-label="show new notifications"
-              color="inherit"
-            >
-              <NotificationsIcon />
-              <span
-                style={{
-                  backgroundColor: "red",
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  marginLeft: 8,
-                }}
-              />
-            </IconButton>
-          )}
           {loggedInUser && (
             <IconButton
               size="large"
