@@ -8,7 +8,6 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import GigCard from "./GigCard";
 import Footer from "../footer/Footer";
 import PopUp from "./DescPopUp";
-import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 const GigDetails = () => {
@@ -18,7 +17,6 @@ const GigDetails = () => {
   const [recentGigs, setRecentGigs] = useState(null);
   const [isPopUpOpen, setPopUpOpen] = useState(false);
   const [orderData, setOrderData] = useState({});
-  const navigate = useNavigate();
   const { loggedInUser } = useUser();
   const SERVER = "http://localhost:8080";
 
@@ -47,10 +45,8 @@ const GigDetails = () => {
         body: JSON.stringify(updatedOrderData),
       });
 
-      if (response.ok) {
-        navigate("/");
-      } else {
-        throw new Error("Failed to place the order");
+      if (!response.ok) {
+        console.log("Failed to order");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -82,12 +78,13 @@ const GigDetails = () => {
           description: "",
           seller: data.owner,
           client: loggedInUser,
+          gig: gig,
         });
       }
     };
 
     fetchGigDetails();
-  }, [gigId, loggedInUser]);
+  }, [gig, gigId, loggedInUser]);
 
   useEffect(() => {
     const fetchGigs = async () => {

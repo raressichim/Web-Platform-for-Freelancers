@@ -1,10 +1,13 @@
 package com.freelancers.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +30,10 @@ public class Gig {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id")
     private Seller owner;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "gig")
+    @JsonIgnore
+    private List<OrderRecord> orders;
 
     public Gig(String title, String tags, float price, String description, byte[] photo, Seller owner) {
         this.title = title;

@@ -23,7 +23,7 @@ import { useState, useRef } from "react";
 
 import Footer from "../footer/Footer";
 
-export default function SellerDashboard() {
+export default function GigForm() {
   const { loggedInUser } = useUser();
   const [titleLength, setTitleLength] = useState(null);
   const [titleText, setTitleText] = useState("");

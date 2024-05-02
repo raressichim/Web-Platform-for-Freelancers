@@ -17,11 +17,14 @@ public class OrderRecord {
     private int id;
 
     private String description;
+    private String status;
     @ManyToOne()
     @JoinColumn(name = "seller_id")
     private Seller seller;
     @ManyToOne()
     @JoinColumn(name = "client_id")
     private User client;
-
+    @ManyToOne()
+    @JoinColumn(name= "gig_id")
+    private Gig gig;
 }

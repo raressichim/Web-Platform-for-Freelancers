@@ -1,9 +1,15 @@
 package com.freelancers.backend.controller;
 
 import com.freelancers.backend.model.OrderRecord;
+import com.freelancers.backend.repository.OrderRecordRepository;
 import com.freelancers.backend.service.OrderRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
@@ -11,9 +17,31 @@ import org.springframework.web.bind.annotation.*;
 public class OrderRecordController {
     @Autowired
     private OrderRecordService orderRecordService;
+    @Autowired
+    private OrderRecordRepository orderRecordRepository;
+
     @PostMapping("/addOrder")
-    public void addOrderRecord(@RequestBody OrderRecord orderRecord){
+    public void addOrderRecord(@RequestBody OrderRecord orderRecord) {
+        orderRecord.setStatus("Pending");
         orderRecordService.saveOrderRecord(orderRecord);
+    }
+
+    @GetMapping("/getOrders/{sellerId}")
+    public List<OrderRecord> getMyOrders(@PathVariable int sellerId) {
+        return orderRecordRepository.findBySellerId(sellerId);
+    }
+
+    @PutMapping("/updateStatus/{orderId}")
+    public ResponseEntity<OrderRecord> updateStatus(@PathVariable int orderId, @RequestBody Map<String,String> status) {
+        Optional<OrderRecord> orderRecordOptional = orderRecordRepository.findById(orderId);
+        if (orderRecordOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            OrderRecord orderRecord = orderRecordOptional.get();
+            orderRecord.setStatus(status.get("status"));
+            orderRecordRepository.save(orderRecord);
+            return ResponseEntity.ok(orderRecord);
+        }
     }
 
 }
