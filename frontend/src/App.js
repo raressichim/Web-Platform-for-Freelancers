@@ -24,6 +24,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/becomeSeller" element={<BecomeSeller />} />
           <Route path="/userProfile" element={<UserProfile />} />
+          <Route path="/addGig" element={<GigForm />} />
           <Route path="/sellerBoard" element={<SellerBoard />} />
           <Route path="/yourGigs" element={<YourGigs />}></Route>
           <Route path="/sellerProfile/:sellerId" element={<SellerProfile />} />

@@ -8,22 +8,40 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  TextField,
+  Button,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useUser } from "../context/UserContext";
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import { Select, MenuItem } from "@mui/material";
 import Footer from "../footer/Footer";
 
 function SellerBoard() {
   const [orders, setOrders] = useState([]);
   const [seller, setSeller] = useState({});
   const { loggedInUser } = useUser();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [currentDescription, setCurrentDescription] = useState("");
+
+  const handleOpenPopup = (description) => {
+    setCurrentDescription(description);
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -102,6 +120,48 @@ function SellerBoard() {
     }
   }, [seller.id]);
 
+  const handleStatusChange = async (event, orderId) => {
+    const newStatus = event.target.value;
+    // Update locally for instant UI feedback
+    const updatedOrders = orders.map((order) => {
+      if (order.id === orderId) {
+        return { ...order, status: newStatus };
+      }
+      return order;
+    });
+    setOrders(updatedOrders);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/order/updateStatus/${orderId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update order status");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      revertStatusUpdate(orderId);
+    }
+  };
+
+  const revertStatusUpdate = (orderId) => {
+    const revertedOrders = orders.map((order) => {
+      if (order.id === orderId) {
+        return { ...order, status: order.prevStatus };
+      }
+      return order;
+    });
+    setOrders(revertedOrders);
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Box sx={{ px: { xs: 2, md: 6 } }}>
@@ -119,7 +179,7 @@ function SellerBoard() {
           </Typography>
         </Breadcrumbs>
       </Box>
-      <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Container sx={{ mt: 4 }}>
         <h1>Manage Orders</h1>
         <TableContainer component={Paper}>
           <Table>
@@ -128,8 +188,8 @@ function SellerBoard() {
                 <TableCell>Gig</TableCell>
                 <TableCell align="right">Buyer</TableCell>
                 <TableCell align="right">Status</TableCell>
-                <TableCell allign="right">Description</TableCell>
-                <TableCell allign="right">Contact</TableCell>
+                <TableCell align="right">Description</TableCell>
+                <TableCell align="right">Contact</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -145,16 +205,72 @@ function SellerBoard() {
                       {order.client.username || "Unknown buyer"}
                     </TableCell>
                     <TableCell align="right">
-                      {order.status || "In progress"}
+                      <Select
+                        labelId="status-label"
+                        id="status-select"
+                        value={order.status}
+                        label="Status"
+                        onChange={(event) =>
+                          handleStatusChange(event, order.id)
+                        }
+                        sx={{ width: 140 }}
+                      >
+                        <MenuItem value="In progress">In progress</MenuItem>
+                        <MenuItem value="Resolved">Resolved</MenuItem>
+                      </Select>
                     </TableCell>
-                    <TableCell allign="right">{order.description}</TableCell>
-                    <TableCell>{order.seller.user.email}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        onClick={() => handleOpenPopup(order.description)}
+                      >
+                        View Description
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right">
+                      {order.seller.user.email}
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Container>
+      <Dialog
+        open={isPopupOpen}
+        onClose={handleClosePopup}
+        aria-labelledby="description-dialog"
+        sx={{
+          "& .MuiDialog-paper": {
+            minHeight: "200px",
+            minWidth: "400px",
+            maxWidth: "70%",
+            width: "auto",
+          },
+        }}
+      >
+        <DialogTitle id="description-dialog">
+          Order Description
+          <IconButton
+            aria-label="close"
+            onClick={handleClosePopup}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <TextField
+            fullWidth
+            multiline
+            value={currentDescription}
+            variant="outlined"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </Box>
   );

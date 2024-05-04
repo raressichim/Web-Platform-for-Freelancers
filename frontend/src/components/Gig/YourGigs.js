@@ -4,16 +4,19 @@ import Typography from "@mui/joy/Typography";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import GigCardForSeller from "./GigCardForSeller";
+import { Card, CardActionArea, Icon } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Footer from "../footer/Footer";
 
 export default function YourGigs() {
   const [yourGigs, setYourGigs] = useState(null);
   const { loggedInUser } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGigs = async () => {
@@ -70,6 +73,37 @@ export default function YourGigs() {
           overflow: "auto",
         }}
       >
+        <Card
+          sx={{
+            width: 300,
+            height: 270,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            backgroundColor: "#e0e0e0",
+            color: "action.active",
+            "&:hover": {
+              backgroundColor: "#d5d5d5",
+              cursor: "pointer",
+            },
+          }}
+          onClick={() => navigate("/addGig")}
+        >
+          <CardActionArea
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Icon sx={{ fontSize: "50px" }}>
+              <AddCircleOutlineIcon />
+            </Icon>
+          </CardActionArea>
+        </Card>
         {yourGigs && yourGigs.length > 0 ? (
           yourGigs.map((gig) => (
             <GigCardForSeller
@@ -80,7 +114,7 @@ export default function YourGigs() {
             />
           ))
         ) : (
-          <ReactRouterLink to="/sellerBoard">
+          <ReactRouterLink to="/addGig">
             <Box
               sx={{
                 display: "flex",
