@@ -104,7 +104,6 @@ function SellerBoard() {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setOrders(data);
         } else {
           console.error("Failed to fetch orders");

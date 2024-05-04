@@ -31,6 +31,11 @@ public class OrderRecordController {
         return orderRecordRepository.findBySellerId(sellerId);
     }
 
+    @GetMapping("/getMyProducts/{clientId}")
+    public List<OrderRecord> getMyProducts(@PathVariable int clientId) {
+        return orderRecordRepository.findByClientId(clientId);
+    }
+
     @PutMapping("/updateStatus/{orderId}")
     public ResponseEntity<OrderRecord> updateStatus(@PathVariable int orderId, @RequestBody Map<String,String> status) {
         Optional<OrderRecord> orderRecordOptional = orderRecordRepository.findById(orderId);

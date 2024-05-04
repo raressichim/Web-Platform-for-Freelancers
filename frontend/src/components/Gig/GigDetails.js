@@ -1,36 +1,45 @@
-import React from "react";
-import { Box, Grid, Typography, Button, CardMedia } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Button,
+  CardMedia,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  IconButton,
+} from "@mui/material";
 import { useParams, Link } from "react-router-dom";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import GigCard from "./GigCard";
 import Footer from "../footer/Footer";
-import PopUp from "./DescPopUp";
 import { useUser } from "../context/UserContext";
+import CloseIcon from "@mui/icons-material/Close";
 
 const GigDetails = () => {
   const { gigId } = useParams();
   const [yourGigs, setYourGigs] = useState(null);
   const [gig, setGig] = useState(null);
   const [recentGigs, setRecentGigs] = useState(null);
-  const [isPopUpOpen, setPopUpOpen] = useState(false);
+  const [isDialogOpen, setDialogOpen] = useState(false);
   const [orderData, setOrderData] = useState({});
   const { loggedInUser } = useUser();
   const SERVER = "http://localhost:8080";
+  const [description, setDescription] = useState("");
 
   const handleBuyClick = () => {
-    document.body.style.overflow = "hidden";
-    setPopUpOpen(true);
+    setDialogOpen(true);
   };
 
   const handleClose = () => {
-    document.body.style.overflow = "unset";
-    setPopUpOpen(false);
+    setDialogOpen(false);
   };
 
-  const handlePay = async (description) => {
+  const handlePay = async () => {
     const updatedOrderData = {
       ...orderData,
       description: description,
@@ -72,10 +81,9 @@ const GigDetails = () => {
     const fetchGigDetails = async () => {
       const response = await fetch(`http://localhost:8080/gig/getGig/${gigId}`);
       const data = await response.json();
-      setGig(data);
       if (response.ok) {
+        setGig(data);
         setOrderData({
-          description: "",
           seller: data.owner,
           client: loggedInUser,
           gig: gig,
@@ -113,7 +121,7 @@ const GigDetails = () => {
   const imageSrc = "data:image/jpeg;base64," + gig.photo;
 
   return (
-    <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+    <Box sx={{ flexGrow: 1 }}>
       <Breadcrumbs
         size="sm"
         aria-label="breadcrumbs"
@@ -181,20 +189,52 @@ const GigDetails = () => {
                   color: "white",
                   borderColor: "#000",
                   backgroundColor: "black",
-                  transition: "background-color 0.3s, color 0.3s",
-                  "&:hover": {
-                    backgroundColor: "white",
-                    color: "black",
-                  },
+                  "&:hover": { backgroundColor: "white", color: "black" },
                 }}
               >
                 Buy service
               </Button>
-              <PopUp
-                open={isPopUpOpen}
+              <Dialog
+                open={isDialogOpen}
                 onClose={handleClose}
-                onSubmit={handlePay}
-              />
+                aria-labelledby="buy-dialog-title"
+                sx={{
+                  "& .MuiDialog-paper": {
+                    minHeight: "200px",
+                    minWidth: "500px",
+                    maxWidth: "70%",
+                    width: "auto",
+                  },
+                }}
+              >
+                <DialogTitle id="buy-dialog-title">
+                  Confirm Purchase
+                  <IconButton
+                    aria-label="close"
+                    onClick={handleClose}
+                    sx={{ position: "absolute", right: 8, top: 8 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                  <TextField
+                    fullWidth
+                    multiline
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    variant="outlined"
+                  />
+                  <Button
+                    onClick={() => handlePay(orderData.description)}
+                    color="primary"
+                    variant="contained"
+                    sx={{ mt: 2 }}
+                  >
+                    Confirm
+                  </Button>
+                </DialogContent>
+              </Dialog>
             </Box>
           )}
         </Grid>
