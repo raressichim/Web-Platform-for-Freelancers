@@ -31,4 +31,8 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "client")
     @JsonIgnore
     private List<OrderRecord> orders;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "client")
+    @JsonIgnore
+    private List<Review> reviews;
 }

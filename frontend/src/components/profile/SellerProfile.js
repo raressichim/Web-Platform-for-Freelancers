@@ -21,6 +21,7 @@ export default function SellerProfile() {
   const [skillsText, setSkillsText] = useState("");
   const [seller, setSeller] = useState("");
   const SERVER = "http://localhost:8080";
+  const [sellerReviews, setSellerReviews] = useState([]);
   const param = useParams();
   const sellerId = param.sellerId;
 
@@ -45,6 +46,80 @@ export default function SellerProfile() {
     fetchSellerData();
   }, [sellerId]);
 
+  useEffect(() => {
+    if (sellerId) {
+      const fetchSellerReviews = async () => {
+        try {
+          const response = await fetch(
+            `${SERVER}/review/getSellerReviews/${sellerId}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setSellerReviews(data);
+          } else {
+            console.log("Failed to fetch seller reviews");
+          }
+        } catch (error) {
+          console.error("Error fetching seller reviews:", error);
+        }
+      };
+
+      fetchSellerReviews();
+    }
+  }, [sellerId]);
+
+  const SellerReviewsSection = () => {
+    if (sellerReviews.length === 0) {
+      return (
+        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+          No reviews yet.
+        </Typography>
+      );
+    }
+
+    return (
+      <Card
+        sx={{
+          border: "2px solid rgba(0, 0, 0, 0.7)",
+          borderRadius: "20px",
+          boxShadow: "none",
+          marginBottom: "16px",
+        }}
+      >
+        <Typography level="title-md" gutterBottom sx={{ fontWeight: "bold" }}>
+          Seller Reviews
+        </Typography>
+        {sellerReviews.map((review, index) => (
+          <Box
+            key={index}
+            sx={{
+              mb: 2,
+              pt: 2,
+              borderBottom: "1px solid",
+              borderColor: "divider",
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: "medium", color: "text.secondary" }}
+            >
+              Rating: {review.rating} / 10
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 0.5 }}>
+              "{review.description}"
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mt: 1, color: "text.secondary" }}
+            >
+              Added by {review.client.username}
+            </Typography>
+          </Box>
+        ))}
+      </Card>
+    );
+  };
+
   return (
     <Box sx={{ flex: 1, width: "100%" }}>
       <Box
@@ -65,7 +140,7 @@ export default function SellerProfile() {
             <ReactRouterLink to="/">
               <HomeRoundedIcon />
             </ReactRouterLink>
-            <Typography color="black" fontWeight={500} fontSize={12}>
+            <Typography color="black" fontWeight={500} fontSize={14}>
               Seller Profile
             </Typography>
           </Breadcrumbs>
@@ -189,6 +264,7 @@ export default function SellerProfile() {
             />
           </Stack>
         </Card>
+        <SellerReviewsSection />
       </Stack>
       <Footer />
     </Box>

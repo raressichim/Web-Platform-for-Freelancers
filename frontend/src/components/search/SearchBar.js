@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -257,7 +258,19 @@ export default function Searchbar() {
               </Button>
             </Link>
           )}
-
+          {loggedInUser && (
+            <Link to="/myProducts">
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="products"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <LocalMallOutlinedIcon />
+              </IconButton>
+            </Link>
+          )}
           {loggedInUser && (
             <IconButton
               size="large"

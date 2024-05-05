@@ -225,9 +225,7 @@ function SellerBoard() {
                         View Description
                       </Button>
                     </TableCell>
-                    <TableCell align="right">
-                      {order.seller.user.email}
-                    </TableCell>
+                    <TableCell align="right">{order.client.email}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

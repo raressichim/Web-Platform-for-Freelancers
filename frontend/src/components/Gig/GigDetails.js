@@ -30,6 +30,8 @@ const GigDetails = () => {
   const { loggedInUser } = useUser();
   const SERVER = "http://localhost:8080";
   const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
+  const [reviews, setReviews] = useState([]);
 
   const handleBuyClick = () => {
     setDialogOpen(true);
@@ -37,6 +39,7 @@ const GigDetails = () => {
 
   const handleClose = () => {
     setDialogOpen(false);
+    setError("");
   };
 
   const handlePay = async () => {
@@ -44,7 +47,11 @@ const GigDetails = () => {
       ...orderData,
       description: description,
     };
-
+    if (!description.trim()) {
+      setError("Please provide a description of your expectations.");
+      return;
+    }
+    setError("");
     try {
       const response = await fetch(`${SERVER}/order/addOrder`, {
         method: "post",
@@ -113,6 +120,75 @@ const GigDetails = () => {
       fetchGigs();
     }
   }, [gig]);
+
+  useEffect(() => {
+    if (gigId) {
+      const fetchReviews = async () => {
+        try {
+          const response = await fetch(
+            `${SERVER}/review/getGigReview/${gigId}`
+          );
+          const data = await response.json();
+          setReviews(data);
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+        }
+      };
+
+      fetchReviews();
+    }
+  }, [gigId]);
+
+  const ReviewsSection = () => {
+    if (reviews.length === 0) {
+      return (
+        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+          No reviews yet.
+        </Typography>
+      );
+    }
+
+    return (
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+          Reviews
+        </Typography>
+        {reviews.map((review, index) => (
+          <Box
+            key={index}
+            sx={{
+              mb: 2,
+              pt: 2,
+              pb: 2,
+              borderBottom: "1px solid",
+              borderColor: "divider",
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: "medium", color: "text.secondary" }}
+            >
+              Rating: {review.rating} / 10
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 0.5 }}>
+              "{review.description}"
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mt: 1, color: "text.secondary" }}
+            >
+              Added by {review.client.username}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    );
+  };
 
   if (!gig) {
     return <div>Loading...</div>;
@@ -200,15 +276,15 @@ const GigDetails = () => {
                 aria-labelledby="buy-dialog-title"
                 sx={{
                   "& .MuiDialog-paper": {
-                    minHeight: "200px",
-                    minWidth: "500px",
+                    minHeight: "250px",
+                    minWidth: "550px",
                     maxWidth: "70%",
                     width: "auto",
                   },
                 }}
               >
                 <DialogTitle id="buy-dialog-title">
-                  Confirm Purchase
+                  Tell the freelancer what you expect from him
                   <IconButton
                     aria-label="close"
                     onClick={handleClose}
@@ -224,12 +300,14 @@ const GigDetails = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     variant="outlined"
+                    error={!!error}
+                    helperText={error}
                   />
                   <Button
                     onClick={() => handlePay(orderData.description)}
                     color="primary"
                     variant="contained"
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 5 }}
                   >
                     Confirm
                   </Button>
@@ -243,6 +321,9 @@ const GigDetails = () => {
             About this gig
           </Typography>
           <Typography>{gig.description}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <ReviewsSection />
         </Grid>
         <Grid item xs={12}>
           {yourGigs && yourGigs.length > 1 ? (

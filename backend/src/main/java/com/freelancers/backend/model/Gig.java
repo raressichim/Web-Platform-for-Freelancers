@@ -35,6 +35,10 @@ public class Gig {
     @JsonIgnore
     private List<OrderRecord> orders;
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "gig")
+    @JsonIgnore
+    private List<Review> reviews;
+
     public Gig(String title, String tags, float price, String description, byte[] photo, Seller owner) {
         this.title = title;
         this.tags = tags;

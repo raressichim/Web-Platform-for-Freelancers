@@ -34,5 +34,9 @@ public class Seller {
     @JsonIgnore
     private List<OrderRecord> orders;
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "seller")
+    @JsonIgnore
+    private List<Review> reviews;
+
 
 }
