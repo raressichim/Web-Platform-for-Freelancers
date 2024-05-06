@@ -19,9 +19,9 @@ import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.grey[300], 0.15),
+  backgroundColor: alpha(theme.palette.grey[500], 0.15),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.grey[300], 0.25),
+    backgroundColor: alpha(theme.palette.grey[600], 0.25),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -50,7 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
+      width: "100ch",
     },
   },
 }));

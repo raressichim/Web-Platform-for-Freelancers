@@ -128,9 +128,14 @@ const GigDetails = () => {
   const ReviewsSection = () => {
     if (reviews.length === 0) {
       return (
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          No reviews yet.
-        </Typography>
+        <Box>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+            Reviews
+          </Typography>
+          <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+            No reviews yet.
+          </Typography>
+        </Box>
       );
     }
 
@@ -239,7 +244,7 @@ const GigDetails = () => {
               Contact info: <br /> email: {gig.owner.user.email}
             </Typography>
           </Box>
-          {loggedInUser.id !== gig.owner.user.id && (
+          {loggedInUser && loggedInUser.id !== gig.owner.user.id && (
             <Box>
               <Button
                 variant="contained"

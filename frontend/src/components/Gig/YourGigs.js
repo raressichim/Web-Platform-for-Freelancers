@@ -73,37 +73,39 @@ export default function YourGigs() {
           overflow: "auto",
         }}
       >
-        <Card
-          sx={{
-            width: 300,
-            height: 270,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            backgroundColor: "#e0e0e0",
-            color: "action.active",
-            "&:hover": {
-              backgroundColor: "#d5d5d5",
-              cursor: "pointer",
-            },
-          }}
-          onClick={() => navigate("/addGig")}
-        >
-          <CardActionArea
+        {yourGigs && yourGigs.length > 0 && (
+          <Card
             sx={{
-              width: "100%",
-              height: "100%",
+              width: 300,
+              height: 270,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              flexDirection: "column",
+              backgroundColor: "#e0e0e0",
+              color: "action.active",
+              "&:hover": {
+                backgroundColor: "#d5d5d5",
+                cursor: "pointer",
+              },
             }}
+            onClick={() => navigate("/addGig")}
           >
-            <Icon sx={{ fontSize: "50px" }}>
-              <AddCircleOutlineIcon />
-            </Icon>
-          </CardActionArea>
-        </Card>
+            <CardActionArea
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon sx={{ fontSize: "50px" }}>
+                <AddCircleOutlineIcon />
+              </Icon>
+            </CardActionArea>
+          </Card>
+        )}
         {yourGigs && yourGigs.length > 0 ? (
           yourGigs.map((gig) => (
             <GigCardForSeller

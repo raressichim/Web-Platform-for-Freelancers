@@ -26,6 +26,7 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useState, useEffect } from "react";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import Footer from "../footer/Footer";
 
 function ProductsBoard() {
@@ -156,56 +157,80 @@ function ProductsBoard() {
           </Typography>
         </Breadcrumbs>
       </Box>
-      <Container sx={{ mt: 4 }}>
-        <h1>Products History</h1>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Gig</TableCell>
-                <TableCell align="right">Seller</TableCell>
-                <TableCell align="right">Status</TableCell>
-                <TableCell align="right">Description</TableCell>
-                <TableCell align="right">Contact</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell component="th" scope="row">
-                    <ReactRouterLink to={`/gig/${order.gig?.id}`}>
-                      {order.gig?.title || "Loading gig details..."}
-                    </ReactRouterLink>
-                  </TableCell>
-                  <TableCell align="right">
-                    {order.seller.user.username || "Unknown seller"}
-                  </TableCell>
-                  <TableCell align="right">{order.status}</TableCell>
-                  <TableCell align="right">
-                    <Button onClick={() => handleOpenPopup(order.description)}>
-                      View Description
-                    </Button>
-                  </TableCell>
-                  <TableCell align="right">{order.seller.user.email}</TableCell>
-                  <TableCell align="right">
-                    {order.status === "Resolved" && order.canReview && (
-                      <Button
-                        onClick={() => {
-                          setIsReviewDialogOpen(true);
-                          setCurrentOrder(order);
-                        }}
-                        aria-label="add review"
-                      >
-                        + Add Review
-                      </Button>
-                    )}
-                  </TableCell>
+      {orders.length <= 0 && (
+        <ReactRouterLink to="/">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              marginTop: "20vh",
+            }}
+          >
+            <WarningAmberOutlinedIcon sx={{ fontSize: "3rem" }} />
+            <Typography sx={{ fontSize: "1.5rem" }}>
+              You haven't bought anything {<br />} Search and go buy some!
+            </Typography>
+          </Box>
+        </ReactRouterLink>
+      )}
+      {orders.length > 0 && (
+        <Container sx={{ mt: 4 }}>
+          <h1>Products History</h1>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Gig</TableCell>
+                  <TableCell align="right">Seller</TableCell>
+                  <TableCell align="right">Status</TableCell>
+                  <TableCell align="right">Description</TableCell>
+                  <TableCell align="right">Contact</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+              </TableHead>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell component="th" scope="row">
+                      <ReactRouterLink to={`/gig/${order.gig?.id}`}>
+                        {order.gig?.title || "Loading gig details..."}
+                      </ReactRouterLink>
+                    </TableCell>
+                    <TableCell align="right">
+                      {order.seller.user.username || "Unknown seller"}
+                    </TableCell>
+                    <TableCell align="right">{order.status}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        onClick={() => handleOpenPopup(order.description)}
+                      >
+                        View Description
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right">
+                      {order.seller.user.email}
+                    </TableCell>
+                    <TableCell align="right">
+                      {order.status === "Resolved" && order.canReview && (
+                        <Button
+                          onClick={() => {
+                            setIsReviewDialogOpen(true);
+                            setCurrentOrder(order);
+                          }}
+                          aria-label="add review"
+                        >
+                          + Add Review
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+      )}
       <Dialog
         open={isPopupOpen}
         onClose={handleClosePopup}
@@ -302,7 +327,7 @@ function ProductsBoard() {
             onClick={submitReview}
             color="primary"
             variant="contained"
-            disabled={!reviewContent.trim() || !reviewRating} // Disable button if content or rating is not set
+            disabled={!reviewContent.trim() || !reviewRating}
             sx={{ mt: 2, width: "100%" }}
           >
             Submit Review

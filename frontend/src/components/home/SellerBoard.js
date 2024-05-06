@@ -25,6 +25,7 @@ import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Select, MenuItem } from "@mui/material";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import Footer from "../footer/Footer";
 
 function SellerBoard() {
@@ -178,60 +179,80 @@ function SellerBoard() {
           </Typography>
         </Breadcrumbs>
       </Box>
-      <Container sx={{ mt: 4 }}>
-        <h1>Manage Orders</h1>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Gig</TableCell>
-                <TableCell align="right">Buyer</TableCell>
-                <TableCell align="right">Status</TableCell>
-                <TableCell align="right">Description</TableCell>
-                <TableCell align="right">Contact</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders &&
-                orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell component="th" scope="row">
-                      <ReactRouterLink to={`/gig/${order.gig?.id}`}>
-                        {order.gig?.title || "Loading gig details..."}
-                      </ReactRouterLink>
-                    </TableCell>
-                    <TableCell align="right">
-                      {order.client.username || "Unknown buyer"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Select
-                        labelId="status-label"
-                        id="status-select"
-                        value={order.status}
-                        label="Status"
-                        onChange={(event) =>
-                          handleStatusChange(event, order.id)
-                        }
-                        sx={{ width: 140 }}
-                      >
-                        <MenuItem value="In progress">In progress</MenuItem>
-                        <MenuItem value="Resolved">Resolved</MenuItem>
-                      </Select>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Button
-                        onClick={() => handleOpenPopup(order.description)}
-                      >
-                        View Description
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right">{order.client.email}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container>
+      {orders.length <= 0 && (
+        <ReactRouterLink to="/">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              marginTop: "20vh",
+            }}
+          >
+            <WarningAmberOutlinedIcon sx={{ fontSize: "3rem" }} />
+            <Typography sx={{ fontSize: "1.5rem" }}>
+              You don't have any orders {<br />} Wait or go and add more gigs!
+            </Typography>
+          </Box>
+        </ReactRouterLink>
+      )}
+      {orders.length > 0 && (
+        <Container sx={{ mt: 4 }}>
+          <h1>Manage Orders</h1>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Gig</TableCell>
+                  <TableCell align="right">Buyer</TableCell>
+                  <TableCell align="right">Status</TableCell>
+                  <TableCell align="right">Description</TableCell>
+                  <TableCell align="right">Contact</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders &&
+                  orders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell component="th" scope="row">
+                        <ReactRouterLink to={`/gig/${order.gig?.id}`}>
+                          {order.gig?.title || "Loading gig details..."}
+                        </ReactRouterLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        {order.client.username || "Unknown buyer"}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Select
+                          labelId="status-label"
+                          id="status-select"
+                          value={order.status}
+                          label="Status"
+                          onChange={(event) =>
+                            handleStatusChange(event, order.id)
+                          }
+                          sx={{ width: 140 }}
+                        >
+                          <MenuItem value="In progress">In progress</MenuItem>
+                          <MenuItem value="Resolved">Resolved</MenuItem>
+                        </Select>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Button
+                          onClick={() => handleOpenPopup(order.description)}
+                        >
+                          View Description
+                        </Button>
+                      </TableCell>
+                      <TableCell align="right">{order.client.email}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+      )}
       <Dialog
         open={isPopupOpen}
         onClose={handleClosePopup}
