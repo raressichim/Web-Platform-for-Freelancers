@@ -13,6 +13,7 @@ import GigUpdateView from "./components/Gig/GigUpdateView";
 import SearchResult from "./components/search/SearchResult";
 import SellerBoard from "./components/home/SellerBoard";
 import ProductsBoard from "./components/home/Products";
+import PaymentForm from "./components/payment/Payment";
 
 function App() {
   return (
@@ -32,7 +33,8 @@ function App() {
           <Route path="/gig/:gigId" element={<GigDetails />} />
           <Route path="gigUpdate/:gigId" element={<GigUpdateView />} />
           <Route path="searchResults" element={<SearchResult />} />
-          <Route path="myProducts" element={<ProductsBoard />}></Route>
+          <Route path="myProducts" element={<ProductsBoard />} />
+          <Route path="pay" element={<PaymentForm />} />
         </Routes>
       </BrowserRouter>
     </div>

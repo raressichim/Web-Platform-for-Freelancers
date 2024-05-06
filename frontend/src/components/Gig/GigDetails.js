@@ -11,7 +11,7 @@ import {
   TextField,
   IconButton,
 } from "@mui/material";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -32,6 +32,7 @@ const GigDetails = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [reviews, setReviews] = useState([]);
+  const navigate = useNavigate();
 
   const handleBuyClick = () => {
     setDialogOpen(true);
@@ -52,23 +53,8 @@ const GigDetails = () => {
       return;
     }
     setError("");
-    try {
-      const response = await fetch(`${SERVER}/order/addOrder`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedOrderData),
-      });
-
-      if (!response.ok) {
-        console.log("Failed to order");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      handleClose();
-    }
+    navigate("/pay", { state: { orderData: updatedOrderData } });
+    handleClose();
   };
 
   useEffect(() => {
