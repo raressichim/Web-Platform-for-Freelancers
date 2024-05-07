@@ -122,33 +122,44 @@ function SellerBoard() {
 
   const handleStatusChange = async (event, orderId) => {
     const newStatus = event.target.value;
-    // Update locally for instant UI feedback
-    const updatedOrders = orders.map((order) => {
-      if (order.id === orderId) {
-        return { ...order, status: newStatus };
-      }
-      return order;
-    });
-    setOrders(updatedOrders);
 
-    try {
-      const response = await fetch(
-        `http://localhost:8080/order/updateStatus/${orderId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
+    if (newStatus === "Resolved") {
+      const hasFileResponse = await fetch(
+        `http://localhost:8080/order/hasFile/${orderId}`
       );
-
-      if (!response.ok) {
-        throw new Error("Failed to update order status");
+      if (hasFileResponse.ok) {
+        const hasFile = await hasFileResponse.json();
+        if (!hasFile) {
+          alert(
+            "You must upload a file before setting the status to 'Resolved'"
+          );
+          return;
+        }
+      } else {
+        alert("Failed to check file status");
+        return;
       }
-    } catch (error) {
-      console.error("Error updating status:", error);
+    }
+
+    const response = await fetch(
+      `http://localhost:8080/order/updateStatus/${orderId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Failed to update order status");
       revertStatusUpdate(orderId);
+    } else {
+      const updatedOrders = orders.map((order) =>
+        order.id === orderId ? { ...order, status: newStatus } : order
+      );
+      setOrders(updatedOrders);
     }
   };
 
@@ -160,6 +171,41 @@ function SellerBoard() {
       return order;
     });
     setOrders(revertedOrders);
+  };
+
+  const handleFileUpload = async (event, orderId) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.type !== "application/zip" && !file.name.endsWith(".zip")) {
+      alert("You can only upload .zip files.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/order/updateFile/${orderId}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to upload file");
+      }
+
+      const updatedOrders = orders.map((order) =>
+        order.id === orderId ? { ...order, fileName: file.name } : order
+      );
+      setOrders(updatedOrders);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
 
   return (
@@ -209,6 +255,7 @@ function SellerBoard() {
                   <TableCell align="right">Status</TableCell>
                   <TableCell align="right">Description</TableCell>
                   <TableCell align="right">Contact</TableCell>
+                  <TableCell align="right">File</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -246,6 +293,19 @@ function SellerBoard() {
                         </Button>
                       </TableCell>
                       <TableCell align="right">{order.client.email}</TableCell>
+                      <TableCell align="right">
+                        <Button component="label">
+                          {order.fileName ? "Change File" : "Upload File"}
+                          <input
+                            type="file"
+                            hidden
+                            onChange={(event) =>
+                              handleFileUpload(event, order.id)
+                            }
+                          />
+                        </Button>
+                        {order.fileName && <span>{order.fileName}</span>}
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>

@@ -16,6 +16,7 @@ import {
   Button,
   MenuItem,
   Select,
+  Tooltip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/joy/Box";
@@ -28,6 +29,8 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import Footer from "../footer/Footer";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 
 function ProductsBoard() {
   const [orders, setOrders] = useState([]);
@@ -140,6 +143,37 @@ function ProductsBoard() {
     }
   };
 
+  const handleFileDownload = async (orderId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/order/getFile/${orderId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to download file.");
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const order = orders.find((order) => order.id === orderId);
+      const filename = order.fileName || "downloaded-file";
+
+      const filenameWithExtension = filename.endsWith(".zip")
+        ? filename
+        : `${filename}.zip`;
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filenameWithExtension;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+      alert("Could not download the file.");
+    }
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Box sx={{ px: { xs: 2, md: 6 } }}>
@@ -222,6 +256,32 @@ function ProductsBoard() {
                         >
                           + Add Review
                         </Button>
+                      )}
+                    </TableCell>
+                    <TableCell align="right">
+                      {order.fileName ? (
+                        <IconButton
+                          onClick={() => handleFileDownload(order.id)}
+                          color="primary"
+                        >
+                          <FileDownloadOutlinedIcon />
+                        </IconButton>
+                      ) : (
+                        <Tooltip
+                          title="Your download option will be available when the freelancer uploads the file"
+                          placement="top"
+                          componentsProps={{
+                            tooltip: {
+                              sx: {
+                                fontSize: "1.1rem",
+                              },
+                            },
+                          }}
+                        >
+                          <IconButton>
+                            <InfoOutlinedIcon color="action" />
+                          </IconButton>
+                        </Tooltip>
                       )}
                     </TableCell>
                   </TableRow>

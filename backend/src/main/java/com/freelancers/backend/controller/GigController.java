@@ -35,7 +35,7 @@ public class GigController {
                                       @RequestPart("tags") String tags,
                                       @RequestPart("price") String price,
                                       @RequestPart("description") String description,
-                                      @RequestPart("photo") MultipartFile photo) throws IOException {
+                                      @RequestPart("photo") MultipartFile photo) {
 
         Optional<User> userOptional = userRepository.findById(userId);
         User user = null;
@@ -48,7 +48,12 @@ public class GigController {
             Seller seller = sellerRepository.findByUser(user);
             if (seller != null) {
                 float priceF = Float.parseFloat(price);
-                Gig gig = new Gig(title, tags, priceF, description, photo.getBytes(), seller);
+                Gig gig = null;
+                try {
+                    gig = new Gig(title, tags, priceF, description, photo.getBytes(), seller);
+                } catch (IOException e) {
+                    return null;
+                }
                 gig.setOwner(seller);
                 gigService.saveGig(gig);
                 return ResponseEntity.ok(gig);

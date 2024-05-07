@@ -18,6 +18,13 @@ public class OrderRecord {
 
     private String description;
     private String status;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] file;
+
+    private String fileName;
+
     @ManyToOne()
     @JoinColumn(name = "seller_id")
     private Seller seller;
