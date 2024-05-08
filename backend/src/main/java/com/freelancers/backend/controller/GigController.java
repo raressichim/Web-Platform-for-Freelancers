@@ -7,6 +7,7 @@ import com.freelancers.backend.repository.GigRepository;
 import com.freelancers.backend.repository.SellerRepository;
 import com.freelancers.backend.repository.UserRepository;
 import com.freelancers.backend.service.GigService;
+import com.freelancers.backend.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,8 @@ public class GigController {
     private UserRepository userRepository;
     @Autowired
     private GigRepository gigRepository;
+    @Autowired
+    private TagService tagService;
 
     @PostMapping(value = "/addGig/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Gig> addGig(@PathVariable int userId, @RequestPart("title") String title,
@@ -122,4 +125,14 @@ public class GigController {
         }
         return resultGigs.stream().toList();
     }
+
+    @GetMapping("/autocompleteTags")
+    public ResponseEntity<List<String>> autocompleteTags(@RequestParam String prefix) {
+        if (prefix == null || prefix.isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
+        List<String> suggestions = tagService.autocompleteTags(prefix);
+        return ResponseEntity.ok(suggestions);
+    }
+
 }
