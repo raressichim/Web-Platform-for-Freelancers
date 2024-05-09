@@ -21,21 +21,22 @@ public class EmailController {
     private UserRepository userRepository;
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendEmail(@RequestBody Map<String,String> emailData){
+    public ResponseEntity<?> sendEmail(@RequestBody Map<String,String> emailData){
         String email = emailData.get("email");
         String subject = "Remember password";
         String body="Hello! This is your token: ";
+        int randomNumber;
         Optional<User> userOptional = Optional.ofNullable(userRepository.findByEmail(email));
         if(userOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         } else{
             User user = userOptional.get();
             Random random = new Random();
-            int randomNumber = random.nextInt(900000) + 100000;
+            randomNumber = random.nextInt(900000) + 100000;
             body+=randomNumber;
         }
         emailService.sendEmail(email, subject, body);
 
-        return ResponseEntity.ok("Email sent successfully");
+        return ResponseEntity.ok(randomNumber);
     }
 }

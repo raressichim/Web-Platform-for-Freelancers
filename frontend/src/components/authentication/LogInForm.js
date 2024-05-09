@@ -29,24 +29,26 @@ export default function LogInForm() {
   let navigate = useNavigate();
   const { login } = useUser();
   const [error, setError] = useState(null);
-  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [emailForRecovery, setEmailForRecovery] = useState("");
+  const [token, setToken] = useState("");
+  const [receivedToken, setReceivedToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [currentDialog, setCurrentDialog] = useState(0); // Dialog state: 0 - closed, 1 - email, 2 - token, 3 - new password
 
-  const handleForgotPassword = async () => {
+  const handleSendToken = async () => {
     try {
       const response = await fetch(`${SERVER}/email/send`, {
         method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailForRecovery }),
       });
-
       if (response.ok) {
+        const data = await response.json();
+        setReceivedToken(data);
         alert(
           "Email sent successfully. Please check your inbox for the token."
         );
-        setEmailDialogOpen(false);
+        setCurrentDialog(2);
       } else {
         alert("Failed to send email. Please try again.");
       }
@@ -55,6 +57,35 @@ export default function LogInForm() {
       alert("An error occurred while sending email.");
     }
   };
+
+  const handleTokenVerification = () => {
+    if (token === receivedToken.toString()) {
+      setCurrentDialog(3);
+    } else {
+      alert("Token is incorrect, please try again.");
+    }
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      const response = await fetch(`${SERVER}/user/changePassword`, {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailForRecovery, newPassword }),
+      });
+      if (response.ok) {
+        alert("Password changed successfully.");
+        navigate("/");
+      } else {
+        alert("Failed to change password.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while changing the password.");
+    }
+  };
+
+  const handleCloseDialog = () => setCurrentDialog(0);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -176,7 +207,7 @@ export default function LogInForm() {
                     href="#"
                     variant="body2"
                     sx={{ color: "black" }}
-                    onClick={() => setEmailDialogOpen(true)}
+                    onClick={() => setCurrentDialog(1)}
                   >
                     Forgot password?
                   </Link>
@@ -192,7 +223,8 @@ export default function LogInForm() {
         </Grid>
       </Grid>
 
-      <Dialog open={emailDialogOpen} onClose={() => setEmailDialogOpen(false)}>
+      {/* Email Dialog */}
+      <Dialog open={currentDialog === 1} onClose={() => setCurrentDialog(0)}>
         <DialogTitle>Forgot Password</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -202,7 +234,7 @@ export default function LogInForm() {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            id="email"
             label="Email Address"
             type="email"
             fullWidth
@@ -212,8 +244,52 @@ export default function LogInForm() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEmailDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleForgotPassword}>Send</Button>
+          <Button onClick={() => setCurrentDialog(0)}>Cancel</Button>
+          <Button onClick={handleSendToken}>Send</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Token Dialog */}
+      <Dialog open={currentDialog === 2} onClose={() => setCurrentDialog(0)}>
+        <DialogTitle>Enter Token</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="token"
+            label="Token"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCurrentDialog(0)}>Cancel</Button>
+          <Button onClick={handleTokenVerification}>Verify Token</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* New Password Dialog */}
+      <Dialog open={currentDialog === 3} onClose={() => setCurrentDialog(0)}>
+        <DialogTitle>Set New Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="newPassword"
+            label="New Password"
+            type="password"
+            fullWidth
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCurrentDialog(0)}>Cancel</Button>
+          <Button onClick={handleChangePassword}>Change Password</Button>
         </DialogActions>
       </Dialog>
     </ThemeProvider>

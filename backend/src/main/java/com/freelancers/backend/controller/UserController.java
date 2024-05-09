@@ -1,6 +1,5 @@
 package com.freelancers.backend.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.freelancers.backend.model.Seller;
 import com.freelancers.backend.model.User;
 import com.freelancers.backend.repository.SellerRepository;
@@ -64,4 +63,18 @@ public class UserController {
         }
     }
 
+    @PutMapping("/changePassword")
+    public ResponseEntity<User> changePassword(@RequestBody Map<String, String> newData) {
+        String email = newData.get("email");
+        String newPassword = newData.get("newPassword");
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findByEmail(email));
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            User user = userOptional.get();
+            user.setPassword(newPassword);
+            userService.saveUser(user);
+            return ResponseEntity.ok(user);
+        }
+    }
 }
