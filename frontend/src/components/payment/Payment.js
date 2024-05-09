@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -52,6 +52,10 @@ function PaymentForm() {
 
   const location = useLocation();
   const orderData = location.state ? location.state.orderData : {};
+
+  const [loading, setLoading] = useState(false);
+  const [paymentAuthorized, setPaymentAuthorized] = useState(false);
+  const navigate = useNavigate();
 
   function hasNumbers(t) {
     return /\d/.test(t);
@@ -261,11 +265,15 @@ function PaymentForm() {
               <StyledButton onClick={prevStep} variant="contained">
                 Back
               </StyledButton>
-              <Link to="/">
+              {loading ? (
+                <Typography>Loading...</Typography>
+              ) : paymentAuthorized ? (
+                <Typography>Payment authorized!</Typography>
+              ) : (
                 <StyledButton type="submit" variant="contained" color="primary">
                   Pay
                 </StyledButton>
-              </Link>
+              )}
             </Grid>
           </Grid>
         </form>
@@ -276,6 +284,7 @@ function PaymentForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validatePaymentInfo()) {
+      setLoading(true);
       console.log("Form Submitted:", { billingInfo, paymentInfo, orderData });
       try {
         const response = await fetch(`http://localhost:8080/order/addOrder`, {
@@ -292,9 +301,14 @@ function PaymentForm() {
         if (!response.ok) {
           throw new Error("Failed to place the order");
         }
-        console.log("Order placed successfully");
+        setTimeout(() => {
+          setLoading(false);
+          setPaymentAuthorized(true);
+          navigate("/");
+        }, 1000);
       } catch (error) {
         console.error("Error placing order:", error);
+        setLoading(false);
       }
     }
   };

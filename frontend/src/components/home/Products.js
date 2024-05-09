@@ -175,8 +175,23 @@ function ProductsBoard() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Box sx={{ px: { xs: 2, md: 6 } }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#E0E0E0",
+      }}
+    >
+      <Box
+        sx={{
+          px: { xs: 2, md: 6 },
+          py: 2,
+          borderBottom: "1px solid #ccc",
+          backgroundColor: "#F5F5F5",
+          color: "#ffffff",
+        }}
+      >
         <Breadcrumbs
           size="sm"
           aria-label="breadcrumbs"
@@ -210,8 +225,17 @@ function ProductsBoard() {
         </ReactRouterLink>
       )}
       {orders.length > 0 && (
-        <Container sx={{ mt: 4 }}>
-          <h1>Products History</h1>
+        <Container
+          sx={{
+            mt: 4,
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
+          <h1 style={{ textAlign: "center", marginTop: "20px", color: "#333" }}>
+            Products History
+          </h1>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>

@@ -1,18 +1,14 @@
 import * as React from "react";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
-import FormLabel from "@mui/joy/FormLabel";
-import Textarea from "@mui/joy/Textarea";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
-
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { Link as ReactRouterLink, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import Footer from "../footer/Footer";
 
 export default function SellerProfile() {
@@ -71,7 +67,7 @@ export default function SellerProfile() {
   const SellerReviewsSection = () => {
     if (sellerReviews.length === 0) {
       return (
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2, color: "gray" }}>
+        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
           No reviews yet.
         </Typography>
       );
@@ -80,34 +76,37 @@ export default function SellerProfile() {
     return (
       <Card
         sx={{
-          border: "1px solid #ccc",
-          borderRadius: "16px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          border: "2px solid rgba(0, 0, 0, 0.7)",
+          borderRadius: "20px",
+          boxShadow: "none",
           marginBottom: "16px",
-          bgcolor: "#fafafa",
         }}
       >
-        <Typography
-          level="h6"
-          gutterBottom
-          sx={{ fontWeight: "bold", color: "#333" }}
-        >
+        <Typography level="title-md" gutterBottom sx={{ fontWeight: "bold" }}>
           Seller Reviews
         </Typography>
         {sellerReviews.map((review, index) => (
-          <Box key={index} sx={{ p: 2, borderBottom: "1px solid #eee" }}>
+          <Box
+            key={index}
+            sx={{
+              mb: 2,
+              pt: 2,
+              borderBottom: "1px solid",
+              borderColor: "divider",
+            }}
+          >
             <Typography
-              variant="body2"
-              sx={{ fontWeight: "bold", color: "#666" }}
+              variant="subtitle1"
+              sx={{ fontWeight: "medium", color: "text.secondary" }}
             >
               Rating: {review.rating} / 10
             </Typography>
-            <Typography variant="body1" sx={{ mt: 0.5, color: "#444" }}>
+            <Typography variant="body2" sx={{ mt: 0.5 }}>
               "{review.description}"
             </Typography>
             <Typography
               variant="caption"
-              sx={{ display: "block", mt: 1, color: "gray" }}
+              sx={{ display: "block", mt: 1, color: "text.secondary" }}
             >
               Added by {review.client.username}
             </Typography>
@@ -118,95 +117,111 @@ export default function SellerProfile() {
   };
 
   return (
-    <Box sx={{ flex: 1, width: "100%", bgcolor: "#f9f9f9" }}>
+    <Box sx={{ flex: 1, width: "100%", backgroundColor: "#f0f0f0" }}>
       <Box
         sx={{
           position: "sticky",
-          top: 0,
-          bgcolor: "white",
-          zIndex: 999,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          top: { sm: -100, md: -110 },
+          bgcolor: "#ffffff",
+          zIndex: 9995,
+          padding: "20px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         }}
       >
-        <Breadcrumbs
-          size="sm"
-          aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon />}
-          sx={{ p: 3 }}
-        >
-          <ReactRouterLink
-            to="/"
-            style={{ color: "inherit", textDecoration: "none" }}
+        <Box sx={{ px: { xs: 2, md: 6 } }}>
+          <Breadcrumbs
+            size="sm"
+            aria-label="breadcrumbs"
+            separator={<ChevronRightRoundedIcon fontSize="sm" />}
+            sx={{ pl: 0 }}
           >
-            <HomeRoundedIcon color="primary" />
-          </ReactRouterLink>
-          <Typography color="text.primary" fontWeight={600}>
-            Seller Profile
-          </Typography>
-        </Breadcrumbs>
+            <ReactRouterLink to="/">
+              <HomeRoundedIcon />
+            </ReactRouterLink>
+            <Typography color="black" fontWeight={500} fontSize={14}>
+              Seller Profile
+            </Typography>
+          </Breadcrumbs>
+        </Box>
       </Box>
-      <Stack spacing={4} sx={{ maxWidth: "800px", mx: "auto", px: 3, py: 4 }}>
-        <ProfileCard
-          title="Seller Info"
-          fields={[
-            { label: "Name", value: seller?.user?.name },
-            { label: "Username", value: seller?.user?.username },
-            { label: "Email", value: seller?.user?.email },
-          ]}
-        />
-        <ProfileCard title="Bio" text={bioText} />
-        <ProfileCard title="Education" text={educationText} />
-        <ProfileCard title="Skills" text={skillsText} />
+      <Box sx={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+            padding: "20px",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Seller Info
+          </Typography>
+          <Divider />
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            <Typography>
+              <strong>Name:</strong> {seller ? seller.user.name : ""}
+            </Typography>
+            <Typography>
+              <strong>Username:</strong> {seller ? seller.user.username : ""}
+            </Typography>
+            <Typography>
+              <strong>Email:</strong> {seller ? seller.user.email : ""}
+            </Typography>
+          </Stack>
+        </Card>
+
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+            padding: "20px",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Bio
+          </Typography>
+          <Divider />
+          <Typography sx={{ mt: 2 }}>{bioText}</Typography>
+        </Card>
+
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+            padding: "20px",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Education
+          </Typography>
+          <Divider />
+          <Typography sx={{ mt: 2 }}>{educationText}</Typography>
+        </Card>
+
+        <Card
+          sx={{
+            border: "2px solid rgba(0, 0, 0, 0.7)",
+            borderRadius: "20px",
+            boxShadow: "none",
+            marginBottom: "16px",
+            padding: "20px",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Skills
+          </Typography>
+          <Divider />
+          <Typography sx={{ mt: 2 }}>{skillsText}</Typography>
+        </Card>
 
         <SellerReviewsSection />
-      </Stack>
+      </Box>
       <Footer />
     </Box>
-  );
-}
-
-function ProfileCard({ title, fields, text }) {
-  return (
-    <Card
-      sx={{
-        border: "1px solid #ccc",
-        borderRadius: "16px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        marginBottom: "16px",
-        padding: 3,
-        bgcolor: "white",
-      }}
-    >
-      <Typography
-        level="h6"
-        sx={{ mb: 2, fontWeight: "medium", color: "#333" }}
-      >
-        {title} {text && <span style={{ color: "red" }}>*</span>}
-      </Typography>
-      <Divider />
-      {fields ? (
-        <Stack
-          direction="row"
-          divider={<Divider orientation="vertical" flexItem />}
-          spacing={2}
-          sx={{ my: 2 }}
-        >
-          {fields.map((field, idx) => (
-            <Box key={idx} sx={{ flexGrow: 1 }}>
-              <FormLabel sx={{ color: "#666" }}>{field.label}</FormLabel>
-              <Typography sx={{ color: "#444" }}>{field.value}</Typography>
-            </Box>
-          ))}
-        </Stack>
-      ) : (
-        <Textarea
-          size="sm"
-          minRows={4}
-          sx={{ mt: 1.5 }}
-          value={text}
-          readOnly
-        />
-      )}
-    </Card>
   );
 }

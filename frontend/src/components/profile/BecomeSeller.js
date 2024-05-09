@@ -89,13 +89,15 @@ export default function Profile() {
   };
 
   return (
-    <Box sx={{ flex: 1, width: "100%" }}>
+    <Box sx={{ flex: 1, width: "100%", backgroundColor: "#f0f0f0" }}>
       <Box
         sx={{
           position: "sticky",
           top: { sm: -100, md: -110 },
-          bgcolor: "background.body",
+          bgcolor: "#ffffff",
           zIndex: 9995,
+          padding: "20px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         }}
       >
         <Box sx={{ px: { xs: 2, md: 6 } }}>

@@ -209,24 +209,45 @@ function SellerBoard() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Box sx={{ px: { xs: 2, md: 6 } }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#E0E0E0",
+      }}
+    >
+      <Box
+        sx={{
+          px: { xs: 2, md: 6 },
+          py: 2,
+          borderBottom: "1px solid #ccc",
+          backgroundColor: "#F5F5F5",
+          color: "#ffffff",
+        }}
+      >
         <Breadcrumbs
           size="sm"
           aria-label="breadcrumbs"
           separator={<ChevronRightRoundedIcon fontSize="sm" />}
           sx={{ pl: 0 }}
         >
-          <ReactRouterLink to="/">
+          <ReactRouterLink
+            to="/"
+            style={{ textDecoration: "none", color: "#333" }}
+          >
             <HomeRoundedIcon />
           </ReactRouterLink>
-          <Typography color="black" fontWeight={500} fontSize={14}>
-            My orders
+          <Typography color="textPrimary" fontWeight={500} fontSize={14}>
+            My Orders
           </Typography>
         </Breadcrumbs>
       </Box>
       {orders.length <= 0 && (
-        <ReactRouterLink to="/">
+        <ReactRouterLink
+          to="/"
+          style={{ textDecoration: "none", color: "#333" }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -234,18 +255,30 @@ function SellerBoard() {
               alignItems: "center",
               textAlign: "center",
               marginTop: "20vh",
+              padding: "20px",
             }}
           >
-            <WarningAmberOutlinedIcon sx={{ fontSize: "3rem" }} />
-            <Typography sx={{ fontSize: "1.5rem" }}>
-              You don't have any orders {<br />} Wait or go and add more gigs!
+            <WarningAmberOutlinedIcon
+              sx={{ fontSize: "3rem", color: "#FF9800" }}
+            />
+            <Typography sx={{ fontSize: "1.5rem", mt: 2, color: "#333" }}>
+              You don't have any orders. Wait or go and add more gigs!
             </Typography>
           </Box>
         </ReactRouterLink>
       )}
       {orders.length > 0 && (
-        <Container sx={{ mt: 4 }}>
-          <h1>Manage Orders</h1>
+        <Container
+          sx={{
+            mt: 4,
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
+          <h1 style={{ textAlign: "center", marginTop: "20px", color: "#333" }}>
+            Manage Orders
+          </h1>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -263,7 +296,10 @@ function SellerBoard() {
                   orders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell component="th" scope="row">
-                        <ReactRouterLink to={`/gig/${order.gig?.id}`}>
+                        <ReactRouterLink
+                          to={`/gig/${order.gig?.id}`}
+                          style={{ textDecoration: "none", color: "#333" }}
+                        >
                           {order.gig?.title || "Loading gig details..."}
                         </ReactRouterLink>
                       </TableCell>
@@ -288,13 +324,19 @@ function SellerBoard() {
                       <TableCell align="right">
                         <Button
                           onClick={() => handleOpenPopup(order.description)}
+                          variant="outlined"
+                          color="primary"
                         >
                           View Description
                         </Button>
                       </TableCell>
                       <TableCell align="right">{order.client.email}</TableCell>
                       <TableCell align="right">
-                        <Button component="label">
+                        <Button
+                          component="label"
+                          variant="outlined"
+                          color="primary"
+                        >
                           {order.fileName ? "Change File" : "Upload File"}
                           <input
                             type="file"
@@ -304,7 +346,7 @@ function SellerBoard() {
                             }
                           />
                         </Button>
-                        {order.fileName && <span>{order.fileName}</span>}
+                        {order.fileName && <span> {order.fileName}</span>}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -326,7 +368,10 @@ function SellerBoard() {
           },
         }}
       >
-        <DialogTitle id="description-dialog">
+        <DialogTitle
+          id="description-dialog"
+          style={{ backgroundColor: "#2196F3", color: "#fff" }}
+        >
           Order Description
           <IconButton
             aria-label="close"
