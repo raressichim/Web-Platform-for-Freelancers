@@ -85,8 +85,6 @@ export default function LogInForm() {
     }
   };
 
-  const handleCloseDialog = () => setCurrentDialog(0);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

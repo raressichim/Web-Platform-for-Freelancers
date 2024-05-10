@@ -19,6 +19,7 @@ import GigCard from "./GigCard";
 import Footer from "../footer/Footer";
 import { useUser } from "../context/UserContext";
 import CloseIcon from "@mui/icons-material/Close";
+import palmtreesPhoto from "../../assets/palmtreesPhoto.jpg";
 
 const GigDetails = () => {
   const { gigId } = useParams();
@@ -128,11 +129,11 @@ const GigDetails = () => {
   const ReviewsSection = () => {
     if (reviews.length === 0) {
       return (
-        <Box>
+        <Box sx={{ mt: 2, p: 2, bgcolor: "#ffffff", borderRadius: 1 }}>
           <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
             Reviews
           </Typography>
-          <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+          <Typography variant="subtitle1" sx={{ mt: 1 }}>
             No reviews yet.
           </Typography>
         </Box>
@@ -140,12 +141,7 @@ const GigDetails = () => {
     }
 
     return (
-      <Box
-        sx={{
-          bgcolor: "background.paper",
-          borderRadius: 2,
-        }}
-      >
+      <Box sx={{ mt: 2, p: 2, bgcolor: "#ffffff", borderRadius: 1 }}>
         <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
           Reviews
         </Typography>
@@ -182,18 +178,29 @@ const GigDetails = () => {
   };
 
   if (!gig) {
-    return <div>Loading...</div>;
+    return (
+      <Typography
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        Loading...
+      </Typography>
+    );
   }
 
-  const imageSrc = "data:image/jpeg;base64," + gig.photo;
+  const imageSrc = gig ? "data:image/jpeg;base64," + gig.photo : palmtreesPhoto;
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, bgcolor: "#f4f4f9" }}>
       <Breadcrumbs
         size="sm"
         aria-label="breadcrumbs"
         separator={<ChevronRightRoundedIcon fontSize="sm" />}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, padding: "10px" }}
       >
         <Link to="/" style={{ display: "flex", alignItems: "center" }}>
           <HomeRoundedIcon />
@@ -206,7 +213,13 @@ const GigDetails = () => {
         <Grid item xs={12} md={6}>
           <CardMedia
             component="img"
-            sx={{ width: "100%", height: "auto", borderRadius: 2 }}
+            sx={{
+              width: "100%",
+              height: "auto",
+              maxHeight: "500px",
+              objectFit: "contain",
+              borderRadius: 2,
+            }}
             image={imageSrc}
             alt={gig.title}
           />
@@ -222,10 +235,17 @@ const GigDetails = () => {
           }}
         >
           <Box>
-            <Typography variant="h4" gutterBottom>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{ fontWeight: 600, fontSize: "1.8rem", color: "#333" }}
+            >
               {gig.title}
             </Typography>
-            <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
+            <Typography
+              variant="subtitle1"
+              sx={{ fontSize: "1.2rem", color: "#555" }}
+            >
               Offered by{" "}
               <Link
                 to={`/sellerProfile/${gig.owner?.user?.id}`}
@@ -234,13 +254,16 @@ const GigDetails = () => {
                 {gig.owner?.user?.username}
               </Link>
             </Typography>
-            <Typography gutterBottom sx={{ my: 2 }}>
+            <Typography sx={{ my: 2, fontSize: "1rem", color: "#666" }}>
               {gig.owner?.description}
             </Typography>
-            <Typography variant="h5" color="secondary" gutterBottom>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 500, fontSize: "1.5rem", color: "#e63946" }}
+            >
               ${gig.price}
             </Typography>
-            <Typography>
+            <Typography sx={{ color: "#666" }}>
               Contact info: <br /> email: {gig.owner.user.email}
             </Typography>
           </Box>
@@ -253,10 +276,9 @@ const GigDetails = () => {
                 sx={{
                   mt: 3,
                   mb: 2,
+                  backgroundColor: "#005b96",
                   color: "white",
-                  borderColor: "#000",
-                  backgroundColor: "black",
-                  "&:hover": { backgroundColor: "white", color: "black" },
+                  "&:hover": { backgroundColor: "#e63946" },
                 }}
               >
                 Buy service
@@ -264,22 +286,27 @@ const GigDetails = () => {
               <Dialog
                 open={isDialogOpen}
                 onClose={handleClose}
-                aria-labelledby="buy-dialog-title"
                 sx={{
                   "& .MuiDialog-paper": {
-                    minHeight: "250px",
-                    minWidth: "550px",
-                    maxWidth: "70%",
-                    width: "auto",
+                    borderRadius: 2,
+                    padding: "20px",
+                    minWidth: "500px",
+                    boxShadow: "0px 8px 26px rgba(0,0,0,0.15)",
                   },
                 }}
+                aria-labelledby="buy-dialog-title"
               >
-                <DialogTitle id="buy-dialog-title">
-                  Tell the freelancer what you expect from him
+                <DialogTitle id="buy-dialog-title" sx={{ fontWeight: "bold" }}>
+                  Tell the freelancer what you expect from them
                   <IconButton
                     aria-label="close"
                     onClick={handleClose}
-                    sx={{ position: "absolute", right: 8, top: 8 }}
+                    sx={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                      color: "text.secondary",
+                    }}
                   >
                     <CloseIcon />
                   </IconButton>
@@ -288,17 +315,22 @@ const GigDetails = () => {
                   <TextField
                     fullWidth
                     multiline
+                    rows={4}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     variant="outlined"
-                    error={!!error}
-                    helperText={error}
+                    sx={{ mb: 2, borderColor: "primary.main" }}
+                    placeholder="Describe your requirements here..."
                   />
                   <Button
                     onClick={() => handlePay(orderData.description)}
                     color="primary"
                     variant="contained"
-                    sx={{ mt: 5 }}
+                    sx={{
+                      width: "100%",
+                      bgcolor: "primary.main",
+                      "&:hover": { bgcolor: "primary.dark" },
+                    }}
                   >
                     Confirm
                   </Button>
@@ -314,14 +346,25 @@ const GigDetails = () => {
           <Typography>{gig.description}</Typography>
         </Grid>
         <Grid item xs={12}>
-          <ReviewsSection />
+          <Box sx={{ bgcolor: "#ffffff", borderRadius: 2, p: 2 }}>
+            <ReviewsSection />
+          </Box>
         </Grid>
         <Grid item xs={12}>
           {yourGigs && yourGigs.length > 1 ? (
             <>
-              <Typography>
-                See other gigs from {gig.owner?.user?.username}
-              </Typography>
+              <Box>
+                <Typography
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    mt: 2,
+                  }}
+                >
+                  See other gigs from {gig.owner?.user?.username}
+                </Typography>
+              </Box>
               <Box
                 sx={{
                   display: "flex",
@@ -377,5 +420,4 @@ const GigDetails = () => {
     </Box>
   );
 };
-
 export default GigDetails;

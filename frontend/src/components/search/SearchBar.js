@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -12,7 +12,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
 import { useUser } from "../context/UserContext";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import { debounce } from "lodash";
@@ -58,7 +57,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Searchbar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const { loggedInUser, logout } = useUser();
   const [isSeller, setIsSeller] = useState(false);
   const SERVER = "http://localhost:8080";
@@ -67,6 +66,7 @@ export default function Searchbar() {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const searchRef = useRef(null);
 
   const fetchSuggestions = useCallback(
     debounce(async (text) => {
@@ -110,6 +110,8 @@ export default function Searchbar() {
         event.preventDefault();
         if (selectedIndex >= 0 && suggestions[selectedIndex]) {
           handleSuggestionClick(suggestions[selectedIndex]);
+        } else {
+          onSearch({ key: "Enter", target: { value: searchText } });
         }
         break;
       default:
@@ -127,6 +129,7 @@ export default function Searchbar() {
     if (event.key === "Enter" || event.type === "click") {
       const searchValue = event.target.value;
       if (!searchValue.trim()) return;
+
       try {
         const response = await fetch(
           `${SERVER}/gig/search?tags=${encodeURIComponent(searchValue)}`
@@ -169,6 +172,19 @@ export default function Searchbar() {
   useEffect(() => {
     setSelectedIndex(-1);
   }, [suggestions]);
+
+  const handleClickOutside = (event) => {
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setSuggestions([]);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -237,7 +253,7 @@ export default function Searchbar() {
         >
           ITFreelancers
         </Typography>
-        <Search>
+        <Search ref={searchRef}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
