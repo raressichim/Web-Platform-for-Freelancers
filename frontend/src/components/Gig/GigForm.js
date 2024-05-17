@@ -11,16 +11,16 @@ import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Card from "@mui/joy/Card";
 import CardActions from "@mui/joy/CardActions";
 import CardOverflow from "@mui/joy/CardOverflow";
-
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import CloseIcon from "@mui/icons-material/Close";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
 import { useUser } from "../context/UserContext";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
-
 import Footer from "../footer/Footer";
 
 export default function GigForm() {
@@ -31,11 +31,13 @@ export default function GigForm() {
   const [bioText, setBioText] = useState("");
   const [priceLength, setPriceLength] = useState(null);
   const [priceText, setPriceText] = useState("");
+  const [suggestedPrice, setSuggestedPrice] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isClicked, setIsClicked] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
-
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
 
@@ -80,6 +82,7 @@ export default function GigForm() {
   const handleChooseFile = () => {
     fileInputRef.current.click();
   };
+
   const SERVER = "http://localhost:8080";
   const userId = loggedInUser.id;
   let navigate = useNavigate();
@@ -116,14 +119,53 @@ export default function GigForm() {
           body: formData,
         });
         if (response.ok) {
-          navigate("/");
+          setSnackbarOpen(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         } else {
-          setError("Error ecountered");
+          setError("Error encountered");
         }
       } catch (error) {
         console.error("Error:", error);
         setError("An error occurred");
       }
+    }
+  };
+
+  const handleSuggestPrice = async () => {
+    if (!titleText || tags.length === 0) {
+      setError("Title and tags are required for price suggestion.");
+      return;
+    }
+
+    setLoading(true);
+    setSuggestedPrice(null);
+    setError(null);
+
+    try {
+      const response = await fetch(`${SERVER}/export/suggestPrice`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: titleText,
+          tags: tags.join(","),
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        setSuggestedPrice(result);
+      } else {
+        setError("Failed to get suggested price.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while suggesting the price.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -298,7 +340,7 @@ export default function GigForm() {
               <span style={{ color: "red" }}>*</span> Description
             </Typography>
             <Typography level="body-sm">
-              Write a introduction of your new service.
+              Write an introduction of your new service.
             </Typography>
           </Box>
           <Divider />
@@ -330,7 +372,7 @@ export default function GigForm() {
         >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
-              <span style={{ color: "red" }}>*</span>Tags
+              <span style={{ color: "red" }}>*</span> Tags
             </Typography>
             <Typography level="body-sm">
               Write the tags that best suit your gig. Note that these will be
@@ -388,8 +430,7 @@ export default function GigForm() {
         >
           <Box sx={{ mb: 1 }}>
             <Typography level="title-md">
-              {" "}
-              <span style={{ color: "red" }}>*</span>Price
+              <span style={{ color: "red" }}>*</span> Price
             </Typography>
             <Typography level="body-sm">
               Set a price in euros for your service.
@@ -435,11 +476,41 @@ export default function GigForm() {
               >
                 Save
               </Button>
+              <Button
+                size="sm"
+                variant="solid"
+                sx={{
+                  color: "#000",
+                  borderColor: "#000",
+                  backgroundColor: "#fff",
+                  transition: "background-color 0.3s, color 0.3s",
+                  "&:hover": {
+                    backgroundColor: "#000",
+                    color: "#fff",
+                  },
+                }}
+                onClick={handleSuggestPrice}
+                disabled={!titleText || tags.length === 0 || loading}
+              >
+                {loading ? <CircularProgress size={24} /> : "Suggest Price"}
+              </Button>
             </CardActions>
           </CardOverflow>
+          {suggestedPrice && (
+            <Typography level="body-sm" sx={{ mt: 2, color: "green" }}>
+              {suggestedPrice}$
+            </Typography>
+          )}
         </Card>
       </Stack>
       <Footer />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Gig added successfully!"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      />
     </Box>
   );
 }

@@ -31,7 +31,6 @@ const GigDetails = () => {
   const { loggedInUser } = useUser();
   const SERVER = "http://localhost:8080";
   const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
 
@@ -41,7 +40,6 @@ const GigDetails = () => {
 
   const handleClose = () => {
     setDialogOpen(false);
-    setError("");
   };
 
   const handlePay = async () => {
@@ -50,10 +48,8 @@ const GigDetails = () => {
       description: description,
     };
     if (!description.trim()) {
-      setError("Please provide a description of your expectations.");
       return;
     }
-    setError("");
     navigate("/pay", { state: { orderData: updatedOrderData } });
     handleClose();
   };
@@ -276,7 +272,7 @@ const GigDetails = () => {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  backgroundColor: "#005b96",
+                  backgroundColor: "#000",
                   color: "white",
                   "&:hover": { backgroundColor: "#e63946" },
                 }}

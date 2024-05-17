@@ -15,6 +15,7 @@ import {
   DialogContentText,
   DialogTitle,
   ThemeProvider,
+  Snackbar,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme } from "@mui/material/styles";
@@ -34,6 +35,7 @@ export default function LogInForm() {
   const [receivedToken, setReceivedToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentDialog, setCurrentDialog] = useState(0); // Dialog state: 0 - closed, 1 - email, 2 - token, 3 - new password
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSendToken = async () => {
     try {
@@ -103,7 +105,10 @@ export default function LogInForm() {
       if (response.ok) {
         const user = await response.json();
         login(user);
-        navigate("/");
+        setSnackbarOpen(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       } else {
         setError("Authentication failed");
       }
@@ -221,7 +226,6 @@ export default function LogInForm() {
         </Grid>
       </Grid>
 
-      {/* Email Dialog */}
       <Dialog open={currentDialog === 1} onClose={() => setCurrentDialog(0)}>
         <DialogTitle>Forgot Password</DialogTitle>
         <DialogContent>
@@ -247,7 +251,6 @@ export default function LogInForm() {
         </DialogActions>
       </Dialog>
 
-      {/* Token Dialog */}
       <Dialog open={currentDialog === 2} onClose={() => setCurrentDialog(0)}>
         <DialogTitle>Enter Token</DialogTitle>
         <DialogContent>
@@ -269,7 +272,6 @@ export default function LogInForm() {
         </DialogActions>
       </Dialog>
 
-      {/* New Password Dialog */}
       <Dialog open={currentDialog === 3} onClose={() => setCurrentDialog(0)}>
         <DialogTitle>Set New Password</DialogTitle>
         <DialogContent>
@@ -290,6 +292,14 @@ export default function LogInForm() {
           <Button onClick={handleChangePassword}>Change Password</Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Logged in successfully!"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      />
     </ThemeProvider>
   );
 }

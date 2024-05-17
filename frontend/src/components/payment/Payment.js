@@ -6,6 +6,8 @@ import {
   Typography,
   Card,
   CardContent,
+  CircularProgress,
+  Snackbar,
 } from "@mui/material";
 import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -55,6 +57,7 @@ function PaymentForm() {
 
   const [loading, setLoading] = useState(false);
   const [paymentAuthorized, setPaymentAuthorized] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
 
   function hasNumbers(t) {
@@ -73,7 +76,6 @@ function PaymentForm() {
     return /^\d{3}$/.test(cvv);
   }
 
-  // Validate fields immediately as they are updated
   function handleBillingChange(key, value) {
     const newBillingInfo = { ...billingInfo, [key]: value };
     newBillingInfo.errors[key] = validateBillingField(key, value);
@@ -151,9 +153,7 @@ function PaymentForm() {
     const currentYear = new Date().getFullYear() % 100;
     const currentMonth = new Date().getMonth() + 1;
 
-    // Check if year is current or future
     if (year < currentYear) return false;
-    // If it's the current year, check the month
     if (year === currentYear && month < currentMonth) return false;
 
     return true;
@@ -266,7 +266,7 @@ function PaymentForm() {
                 Back
               </StyledButton>
               {loading ? (
-                <Typography>Loading...</Typography>
+                <CircularProgress />
               ) : paymentAuthorized ? (
                 <Typography>Payment authorized!</Typography>
               ) : (
@@ -304,7 +304,10 @@ function PaymentForm() {
         setTimeout(() => {
           setLoading(false);
           setPaymentAuthorized(true);
-          navigate("/");
+          setSnackbarOpen(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         }, 1000);
       } catch (error) {
         console.error("Error placing order:", error);
@@ -316,6 +319,13 @@ function PaymentForm() {
   return (
     <Container>
       <StyledCard>{renderStep()}</StyledCard>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Payment successfully authorized!"
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </Container>
   );
 }
