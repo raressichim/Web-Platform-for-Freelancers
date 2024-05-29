@@ -116,7 +116,7 @@ const SearchResults = () => {
           </Box>
         )}
         :
-        {gigs.length && (
+        {gigs.length > 0 && gigs.length < 4 && (
           <Box>
             <Box
               sx={{
