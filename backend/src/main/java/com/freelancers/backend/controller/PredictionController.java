@@ -55,13 +55,11 @@ public class PredictionController {
     private Process getProcess(Map<String, String> suggestionData) throws IOException, InterruptedException {
         String pythonScriptPath = "C:\\Users\\rares\\Desktop\\licenta\\Web-Platform-for-Freelancers\\backend\\output\\price_suggestion.py";
 
-        // First, retrain the model
         String[] retrainCmd = new String[]{"python", pythonScriptPath, "retrain"};
         ProcessBuilder retrainPb = new ProcessBuilder(retrainCmd);
         Process retrainProcess = retrainPb.start();
         retrainProcess.waitFor();
 
-        // Then, predict the price
         String[] predictCmd = new String[]{"python", pythonScriptPath, "predict", suggestionData.get("title"), suggestionData.get("tags")};
         ProcessBuilder predictPb = new ProcessBuilder(predictCmd);
         return predictPb.start();
