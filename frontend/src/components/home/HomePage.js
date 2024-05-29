@@ -86,7 +86,7 @@ export default function HomePage() {
           paddingBottom: "20px",
         }}
       >
-        <Typography variant="h5" sx={{ marginBottom: "20px" }}>
+        <Typography variant="h5" sx={{ marginBottom: "20px", color: "#333" }}>
           Recent gigs
         </Typography>
         <Box
@@ -95,22 +95,21 @@ export default function HomePage() {
             flexWrap: "wrap",
             justifyContent: "center",
             gap: "20px",
+            marginBottom: "20px",
           }}
         >
           {recentGigs.map((gig) => (
             <GigCard
               key={gig.id}
+              id={gig.id}
               title={gig.title}
               photo={gig.photo}
               seller={gig.owner.user}
-              id={gig.id}
             />
           ))}
         </Box>
       </Box>
-      <Box sx={{ mt: "auto" }}>
-        <Footer />
-      </Box>
+      <Footer />
     </Box>
   );
 }

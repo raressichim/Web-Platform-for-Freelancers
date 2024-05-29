@@ -86,7 +86,7 @@ const GigDetails = () => {
     };
 
     fetchGigDetails();
-  }, [gigId, loggedInUser]);
+  }, [gig, gigId, loggedInUser]);
 
   useEffect(() => {
     const fetchGigs = async () => {
