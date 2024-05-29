@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import Card from "@mui/material/Card";
 import { useState, useEffect } from "react";
-import palmtreesVideo from "../../assets/palmtreesVideo.mp4";
+import giph from "../../assets/giphy.webp";
 import GigCard from "../Gig/GigCard";
 import Footer from "../footer/Footer";
 import Searchbar from "../search/SearchBar";
@@ -33,25 +33,26 @@ export default function HomePage() {
         flexDirection: "column",
         height: "100%",
         overflow: "hidden",
+        bgcolor: "#f5f5f5",
       }}
     >
       <Searchbar />
       <Box
         sx={{
-          flex: 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "42vh",
           overflow: "hidden",
+          bgcolor: "#000",
         }}
       >
-        <Card style={{ height: "95vh" }}>
+        <Card style={{ height: "100%", width: "100%", position: "relative" }}>
           <CardMedia
-            component="video"
-            image={palmtreesVideo}
-            autoPlay
-            loop
-            muted
+            component="img"
+            src={giph}
+            alt="Coding GIF"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
           <Typography
             variant="h4"
@@ -63,9 +64,9 @@ export default function HomePage() {
               backgroundColor: "rgba(0, 0, 0, 0.5)",
               padding: "10px",
               borderRadius: "5px",
-              bottom: "50%",
+              top: "50%",
               left: "50%",
-              transform: "translate(-50%, 50%)",
+              transform: "translate(-50%, -50%)",
             }}
           >
             Service for freelancers
@@ -76,14 +77,16 @@ export default function HomePage() {
       </Box>
       <Box
         sx={{
+          flex: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          bgcolor: "#fff",
           paddingTop: "20px",
           paddingBottom: "20px",
         }}
       >
-        <Typography variant="h5" sx={{ paddingBottom: "20px" }}>
+        <Typography variant="h5" sx={{ marginBottom: "20px" }}>
           Recent gigs
         </Typography>
         <Box
@@ -105,7 +108,7 @@ export default function HomePage() {
           ))}
         </Box>
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "5vh" }}>
+      <Box sx={{ mt: "auto" }}>
         <Footer />
       </Box>
     </Box>

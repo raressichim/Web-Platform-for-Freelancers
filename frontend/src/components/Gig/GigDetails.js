@@ -21,6 +21,8 @@ import { useUser } from "../context/UserContext";
 import CloseIcon from "@mui/icons-material/Close";
 import palmtreesPhoto from "../../assets/palmtreesPhoto.jpg";
 
+const TAX_PERCENTAGE = 12; // 12% tax
+
 const GigDetails = () => {
   const { gigId } = useParams();
   const [yourGigs, setYourGigs] = useState(null);
@@ -46,6 +48,7 @@ const GigDetails = () => {
     const updatedOrderData = {
       ...orderData,
       description: description,
+      totalPrice: gig.price + gig.price * (TAX_PERCENTAGE / 100),
     };
     if (!description.trim()) {
       return;
@@ -77,12 +80,13 @@ const GigDetails = () => {
           seller: data.owner,
           client: loggedInUser,
           gig: gig,
+          price: data.price,
         });
       }
     };
 
     fetchGigDetails();
-  }, [gig, gigId, loggedInUser]);
+  }, [gigId, loggedInUser]);
 
   useEffect(() => {
     const fetchGigs = async () => {

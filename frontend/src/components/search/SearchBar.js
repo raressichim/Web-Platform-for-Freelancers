@@ -122,7 +122,7 @@ export default function Searchbar() {
   const handleSuggestionClick = (suggestion) => {
     setSearchText(suggestion);
     setSelectedIndex(-1);
-    onSearch({ key: "Enter", target: { value: suggestion } });
+    onSearch({ key: "Enter", target: { value: searchText } });
   };
 
   const onSearch = async (event) => {
@@ -173,18 +173,18 @@ export default function Searchbar() {
     setSelectedIndex(-1);
   }, [suggestions]);
 
-  const handleClickOutside = (event) => {
-    if (searchRef.current && !searchRef.current.contains(event.target)) {
-      setSuggestions([]);
-    }
-  };
+  // const handleClickOutside = (event) => {
+  //   if (searchRef.current && !searchRef.current.contains(event.target)) {
+  //     setSuggestions([]);
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   const handleLogout = () => {
     logout();

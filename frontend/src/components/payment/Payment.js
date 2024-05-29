@@ -8,6 +8,7 @@ import {
   CardContent,
   CircularProgress,
   Snackbar,
+  Box,
 } from "@mui/material";
 import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,20 +20,25 @@ const Container = styled.div`
   height: 100vh;
   width: 100vw;
   background-color: #f4f4f4;
+  padding: 20px;
 `;
 
 const StyledCard = styled(Card)`
   max-width: 480px;
+  width: 100%;
   margin: auto;
   padding: 20px;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
 `;
 
 const StyledButton = styled(Button)`
   margin-top: 20px;
+  height: 48px;
+  width: 120px;
 `;
 
-function PaymentForm() {
+const PaymentForm = () => {
   const [step, setStep] = useState(1);
   const [billingInfo, setBillingInfo] = useState({
     firstName: "",
@@ -60,104 +66,87 @@ function PaymentForm() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
 
-  function hasNumbers(t) {
-    return /\d/.test(t);
-  }
+  const TAX_PERCENTAGE = 12;
+  const taxAmount = (orderData.price * TAX_PERCENTAGE) / 100;
+  const totalPrice = orderData.price + taxAmount;
 
-  function isValidZip(zip) {
-    return /^\d{5}(-\d{4})?$/.test(zip);
-  }
-
-  function isValidCardNumber(number) {
-    return number.length === 16 && /^\d+$/.test(number);
-  }
-
-  function isValidCVV(cvv) {
-    return /^\d{3}$/.test(cvv);
-  }
-
-  function handleBillingChange(key, value) {
+  const handleBillingChange = (key, value) => {
     const newBillingInfo = { ...billingInfo, [key]: value };
     newBillingInfo.errors[key] = validateBillingField(key, value);
     setBillingInfo(newBillingInfo);
-  }
+  };
 
-  function validateBillingField(key, value) {
+  const validateBillingField = (key, value) => {
     switch (key) {
       case "firstName":
       case "lastName":
       case "address":
       case "city":
       case "state":
-        if (hasNumbers(value)) return "Invalid entry; numbers are not allowed.";
+        if (/\d/.test(value)) return "Invalid entry; numbers are not allowed.";
         break;
       case "zip":
-        if (!isValidZip(value)) return "Invalid ZIP code.";
+        if (!/^\d{5}(-\d{4})?$/.test(value)) return "Invalid ZIP code.";
         break;
       default:
         return "";
     }
     return "";
-  }
+  };
 
-  function validatePaymentField(key, value) {
-    switch (key) {
-      case "cardNumber":
-        if (!isValidCardNumber(value)) return "Invalid card number.";
-        break;
-      case "cardName":
-        if (hasNumbers(value)) return "Invalid name on card.";
-        break;
-      case "expDate":
-        if (!isValidDate(value)) return "Invalid expiration date.";
-        break;
-      case "cvv":
-        if (!isValidCVV(value)) return "Invalid CVV.";
-        break;
-      default:
-        return "";
-    }
-    return "";
-  }
-
-  function nextStep() {
-    if (validateBillingInfo()) setStep(2);
-  }
-
-  function prevStep() {
-    setStep(1);
-  }
-
-  function handlePaymentChange(key, value) {
+  const handlePaymentChange = (key, value) => {
     if (key === "expDate") {
       value = formatExpirationDate(value);
     }
     const newPaymentInfo = { ...paymentInfo, [key]: value };
     newPaymentInfo.errors[key] = validatePaymentField(key, value);
     setPaymentInfo(newPaymentInfo);
-  }
+  };
 
-  function formatExpirationDate(value) {
+  const formatExpirationDate = (value) => {
     if (value.length === 2 && paymentInfo.expDate.length === 1) {
       value += "/";
     }
     return value;
-  }
+  };
 
-  function isValidDate(date) {
-    const regex = /^(0[1-9]|1[0-2])\/(\d{2})$/;
-    if (!regex.test(date)) {
-      return false;
+  const validatePaymentField = (key, value) => {
+    switch (key) {
+      case "cardNumber":
+        if (!/^\d{16}$/.test(value)) return "Invalid card number.";
+        break;
+      case "cardName":
+        if (/\d/.test(value)) return "Invalid name on card.";
+        break;
+      case "expDate":
+        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(value))
+          return "Invalid expiration date.";
+        const [month, year] = value.split("/").map(Number);
+        const currentYear = new Date().getFullYear() % 100;
+        const currentMonth = new Date().getMonth() + 1;
+        if (
+          year < currentYear ||
+          (year === currentYear && month < currentMonth)
+        ) {
+          return "Card is expired.";
+        }
+        break;
+      case "cvv":
+        if (!/^\d{3}$/.test(value)) return "Invalid CVV.";
+        break;
+      default:
+        return "";
     }
-    const [month, year] = date.split("/").map(Number);
-    const currentYear = new Date().getFullYear() % 100;
-    const currentMonth = new Date().getMonth() + 1;
+    return "";
+  };
 
-    if (year < currentYear) return false;
-    if (year === currentYear && month < currentMonth) return false;
+  const nextStep = () => {
+    setStep(step + 1);
+  };
 
-    return true;
-  }
+  const prevStep = () => {
+    setStep(step - 1);
+  };
 
   const validateBillingInfo = () => {
     let errors = {};
@@ -182,104 +171,6 @@ function PaymentForm() {
     setPaymentInfo({ ...paymentInfo, errors });
     return Object.keys(errors).length === 0;
   };
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return renderBillingInfo();
-      case 2:
-        return renderPaymentInfo();
-      default:
-        return null;
-    }
-  };
-
-  function renderBillingInfo() {
-    return (
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Billing Information
-        </Typography>
-        <form>
-          <Grid container spacing={2}>
-            {Object.entries(billingInfo).map(([key, value]) => {
-              if (key !== "errors") {
-                return (
-                  <Grid item xs={12} key={key}>
-                    <TextField
-                      fullWidth
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      variant="outlined"
-                      value={value}
-                      onChange={(e) => handleBillingChange(key, e.target.value)}
-                      error={!!billingInfo.errors[key]}
-                      helperText={billingInfo.errors[key]}
-                    />
-                  </Grid>
-                );
-              }
-              return null;
-            })}
-            <Grid item xs={12} container justifyContent="flex-end">
-              <StyledButton
-                onClick={nextStep}
-                variant="contained"
-                color="primary"
-              >
-                Next
-              </StyledButton>
-            </Grid>
-          </Grid>
-        </form>
-      </CardContent>
-    );
-  }
-
-  function renderPaymentInfo() {
-    return (
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Payment Information
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            {Object.entries(paymentInfo).map(([key, value]) => {
-              if (key !== "errors") {
-                return (
-                  <Grid item xs={12} key={key}>
-                    <TextField
-                      fullWidth
-                      label={key.charAt(0).toUpperCase() + key.slice(1)}
-                      variant="outlined"
-                      value={value}
-                      onChange={(e) => handlePaymentChange(key, e.target.value)}
-                      error={!!paymentInfo.errors[key]}
-                      helperText={paymentInfo.errors[key]}
-                    />
-                  </Grid>
-                );
-              }
-              return null;
-            })}
-            <Grid item xs={12} container justifyContent="space-between">
-              <StyledButton onClick={prevStep} variant="contained">
-                Back
-              </StyledButton>
-              {loading ? (
-                <CircularProgress />
-              ) : paymentAuthorized ? (
-                <Typography>Payment authorized!</Typography>
-              ) : (
-                <StyledButton type="submit" variant="contained" color="primary">
-                  Pay
-                </StyledButton>
-              )}
-            </Grid>
-          </Grid>
-        </form>
-      </CardContent>
-    );
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -316,6 +207,135 @@ function PaymentForm() {
     }
   };
 
+  const renderCheckoutInfo = () => (
+    <CardContent>
+      <Typography variant="h5" gutterBottom align="center">
+        Checkout Information
+      </Typography>
+      <Box
+        mt={3}
+        p={2}
+        bgcolor="#f9f9f9"
+        borderRadius="8px"
+        border="1px solid #ddd"
+      >
+        <Typography variant="subtitle1" align="center">
+          Service Price: ${orderData.price.toFixed(2)}
+        </Typography>
+        <Typography variant="subtitle1" align="center">
+          Tax (12%): ${taxAmount.toFixed(2)}
+        </Typography>
+        <Typography variant="subtitle1" align="center">
+          Total Price: ${totalPrice.toFixed(2)}
+        </Typography>
+      </Box>
+      <Grid container justifyContent="center">
+        <StyledButton onClick={nextStep} variant="contained" color="primary">
+          Next
+        </StyledButton>
+      </Grid>
+    </CardContent>
+  );
+
+  const renderBillingInfo = () => (
+    <CardContent>
+      <Typography variant="h5" gutterBottom>
+        Billing Information
+      </Typography>
+      <form>
+        <Grid container spacing={2}>
+          {Object.entries(billingInfo).map(([key, value]) => {
+            if (key !== "errors") {
+              return (
+                <Grid item xs={12} key={key}>
+                  <TextField
+                    fullWidth
+                    label={key.charAt(0).toUpperCase() + key.slice(1)}
+                    variant="outlined"
+                    value={value}
+                    onChange={(e) => handleBillingChange(key, e.target.value)}
+                    error={!!billingInfo.errors[key]}
+                    helperText={billingInfo.errors[key]}
+                  />
+                </Grid>
+              );
+            }
+            return null;
+          })}
+          <Grid item xs={12} container justifyContent="space-between">
+            <StyledButton onClick={prevStep} variant="contained">
+              Back
+            </StyledButton>
+            <StyledButton
+              onClick={nextStep}
+              variant="contained"
+              color="primary"
+            >
+              Next
+            </StyledButton>
+          </Grid>
+        </Grid>
+      </form>
+    </CardContent>
+  );
+
+  const renderPaymentInfo = () => (
+    <CardContent>
+      <Typography variant="h5" gutterBottom>
+        Payment Information
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          {Object.entries(paymentInfo).map(([key, value]) => {
+            if (key !== "errors") {
+              return (
+                <Grid item xs={12} key={key}>
+                  <TextField
+                    fullWidth
+                    label={key.charAt(0).toUpperCase() + key.slice(1)}
+                    variant="outlined"
+                    value={value}
+                    onChange={(e) => handlePaymentChange(key, e.target.value)}
+                    error={!!paymentInfo.errors[key]}
+                    helperText={paymentInfo.errors[key]}
+                  />
+                </Grid>
+              );
+            }
+            return null;
+          })}
+          <Grid item xs={12} container justifyContent="space-between">
+            <StyledButton onClick={prevStep} variant="contained">
+              Back
+            </StyledButton>
+            {loading ? (
+              <CircularProgress />
+            ) : paymentAuthorized ? (
+              <Typography>Payment authorized!</Typography>
+            ) : (
+              <StyledButton type="submit" variant="contained" color="primary">
+                Pay
+              </StyledButton>
+            )}
+          </Grid>
+        </Grid>
+      </form>
+    </CardContent>
+  );
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return renderCheckoutInfo();
+      case 2:
+        return renderBillingInfo();
+      case 3:
+        return renderPaymentInfo();
+      default:
+        return null;
+    }
+  };
+
   return (
     <Container>
       <StyledCard>{renderStep()}</StyledCard>
@@ -328,6 +348,6 @@ function PaymentForm() {
       />
     </Container>
   );
-}
+};
 
 export default PaymentForm;
