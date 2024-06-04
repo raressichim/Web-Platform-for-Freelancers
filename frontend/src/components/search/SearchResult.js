@@ -45,7 +45,7 @@ const SearchResults = () => {
           px: { xs: 2, md: 6 },
           width: "100%",
           flex: 1,
-          bgcolor: "white",
+          bgcolor: "#E8E8E8",
           boxShadow: 3,
         }}
       >
@@ -74,13 +74,14 @@ const SearchResults = () => {
           >
             <WarningAmberOutlinedIcon sx={{ fontSize: "3rem" }} />
             <Typography>No gigs found for your search.</Typography>
-            <Typography>See other gigs</Typography>
+            <Typography sx={{ mt: 4 }}>See other gigs</Typography>
             <Box
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
                 gap: "20px",
+                mt: 4,
               }}
             >
               {allGigs.map((gig) => (
@@ -102,6 +103,7 @@ const SearchResults = () => {
               flexWrap: "wrap",
               justifyContent: "center",
               gap: "20px",
+              mb: 4,
             }}
           >
             {gigs.map((gig) => (
@@ -115,7 +117,6 @@ const SearchResults = () => {
             ))}
           </Box>
         )}
-        :
         {gigs.length > 0 && gigs.length < 4 && (
           <Box>
             <Box
@@ -124,6 +125,7 @@ const SearchResults = () => {
                 flexWrap: "wrap",
                 justifyContent: "center",
                 gap: "20px",
+                mb: 4,
               }}
             >
               {gigs.map((gig) => (
@@ -143,6 +145,7 @@ const SearchResults = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 2,
+                mt: 6,
                 mb: 4,
               }}
             >
@@ -154,6 +157,7 @@ const SearchResults = () => {
                 flexWrap: "wrap",
                 justifyContent: "center",
                 gap: "20px",
+                mb: 4,
               }}
             >
               {allGigs
@@ -171,7 +175,11 @@ const SearchResults = () => {
           </Box>
         )}
       </Box>
-      <Footer />
+      <Footer
+        sx={{
+          mt: 4,
+        }}
+      />
     </Box>
   );
 };

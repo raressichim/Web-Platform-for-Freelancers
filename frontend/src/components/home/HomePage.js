@@ -4,10 +4,10 @@ import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import Card from "@mui/material/Card";
 import { useState, useEffect } from "react";
-import giph from "../../assets/giphy.webp";
 import GigCard from "../Gig/GigCard";
 import Footer from "../footer/Footer";
 import Searchbar from "../search/SearchBar";
+import photo from "../../assets/photo.jpg";
 
 export default function HomePage() {
   const [recentGigs, setRecentGigs] = useState([]);
@@ -33,7 +33,7 @@ export default function HomePage() {
         flexDirection: "column",
         height: "100%",
         overflow: "hidden",
-        bgcolor: "#f5f5f5",
+        bgcolor: "#fdf5e6", // Cream background color for the main container
       }}
     >
       <Searchbar />
@@ -42,7 +42,7 @@ export default function HomePage() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "42vh",
+          height: "46vh",
           overflow: "hidden",
           bgcolor: "#000",
         }}
@@ -50,7 +50,7 @@ export default function HomePage() {
         <Card style={{ height: "100%", width: "100%", position: "relative" }}>
           <CardMedia
             component="img"
-            src={giph}
+            src={photo}
             alt="Coding GIF"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
@@ -81,7 +81,7 @@ export default function HomePage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          bgcolor: "#fff",
+          bgcolor: "#E8E8E8", // Cream background color for the recent gigs section
           paddingTop: "20px",
           paddingBottom: "20px",
         }}

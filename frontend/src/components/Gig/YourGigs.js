@@ -1,7 +1,7 @@
 import * as React from "react";
-import Box from "@mui/joy/Box";
-import Typography from "@mui/joy/Typography";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
@@ -31,23 +31,32 @@ export default function YourGigs() {
       }
     };
     fetchGigs();
-  });
+  }, [loggedInUser.id]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        bgcolor: "#f0f0f0",
+      }}
+    >
       <Box
         sx={{
           position: "sticky",
-          top: { sm: -100, md: -110 },
-          bgcolor: "background.body",
+          top: 0,
+          bgcolor: "#ffffff",
           zIndex: 9995,
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          padding: "10px 20px",
         }}
       >
         <Box sx={{ px: { xs: 2, md: 6 } }}>
           <Breadcrumbs
             size="sm"
             aria-label="breadcrumbs"
-            separator={<ChevronRightRoundedIcon fontSize="sm" />}
+            separator={<ChevronRightRoundedIcon fontSize="small" />}
             sx={{ pl: 0 }}
           >
             <ReactRouterLink to="/">
@@ -57,7 +66,10 @@ export default function YourGigs() {
               Seller Menu
             </Typography>
           </Breadcrumbs>
-          <Typography level="h2" component="h1" sx={{ mt: 1, mb: 2 }}>
+          <Typography
+            variant="h4"
+            sx={{ mt: 1, mb: 2, fontWeight: "bold", color: "#333" }}
+          >
             Your gigs
           </Typography>
         </Box>
@@ -69,8 +81,9 @@ export default function YourGigs() {
           flexWrap: "wrap",
           justifyContent: "center",
           gap: "20px",
-          marginBottom: "0.5rem",
-          overflow: "auto",
+          marginBottom: "10px", // Reduced the bottom margin
+          padding: "20px",
+          bgcolor: "#fafafa",
         }}
       >
         {yourGigs && yourGigs.length > 0 && (
@@ -84,6 +97,8 @@ export default function YourGigs() {
               flexDirection: "column",
               backgroundColor: "#e0e0e0",
               color: "action.active",
+              borderRadius: "10px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               "&:hover": {
                 backgroundColor: "#d5d5d5",
                 cursor: "pointer",
@@ -108,15 +123,23 @@ export default function YourGigs() {
         )}
         {yourGigs && yourGigs.length > 0 ? (
           yourGigs.map((gig) => (
-            <GigCardForSeller
-              key={gig.id}
-              title={gig.title}
-              photo={gig.photo}
-              id={gig.id}
-            />
+            <Box key={gig.id} sx={{ margin: "10px" }}>
+              <GigCardForSeller
+                title={gig.title}
+                photo={gig.photo}
+                id={gig.id}
+                sx={{
+                  borderRadius: "10px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                }}
+              />
+            </Box>
           ))
         ) : (
-          <ReactRouterLink to="/addGig">
+          <ReactRouterLink
+            to="/addGig"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <Box
               sx={{
                 display: "flex",
@@ -124,18 +147,28 @@ export default function YourGigs() {
                 alignItems: "center",
                 textAlign: "center",
                 marginTop: "20vh",
+                color: "#555",
               }}
             >
-              <WarningAmberOutlinedIcon sx={{ fontSize: "3rem" }} />
-              <Typography sx={{ fontSize: "1.5rem" }}>
-                You don't have any gigs added {<br />} Switch to selling to
-                start
+              <WarningAmberOutlinedIcon
+                sx={{ fontSize: "3rem", color: "#f44336" }}
+              />
+              <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+                You don't have any gigs added <br /> Switch to selling to start
               </Typography>
             </Box>
           </ReactRouterLink>
         )}
       </Box>
-      <Footer />
+      <Footer
+        sx={{
+          bgcolor: "#333",
+          color: "white",
+          padding: "20px",
+          textAlign: "center",
+          mt: "auto",
+        }}
+      ></Footer>
     </Box>
   );
 }
