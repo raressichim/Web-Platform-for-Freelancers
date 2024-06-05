@@ -33,7 +33,7 @@ export default function HomePage() {
         flexDirection: "column",
         height: "100%",
         overflow: "hidden",
-        bgcolor: "#fdf5e6", // Cream background color for the main container
+        bgcolor: "#fdf5e6",
       }}
     >
       <Searchbar />
@@ -55,7 +55,7 @@ export default function HomePage() {
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
           <Typography
-            variant="h4"
+            variant="h3"
             component="div"
             sx={{
               position: "absolute",
@@ -67,6 +67,7 @@ export default function HomePage() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
+              fontWeight: 700,
             }}
           >
             Service for freelancers
@@ -81,12 +82,16 @@ export default function HomePage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          bgcolor: "#E8E8E8", // Cream background color for the recent gigs section
+          bgcolor: "#E8E8E8",
           paddingTop: "20px",
           paddingBottom: "20px",
         }}
       >
-        <Typography variant="h5" sx={{ marginBottom: "20px", color: "#333" }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ fontWeight: 500, fontSize: "1.8rem", color: "#333" }}
+        >
           Recent gigs
         </Typography>
         <Box

@@ -274,6 +274,7 @@ function SellerBoard() {
             backgroundColor: "#fff",
             borderRadius: "8px",
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            marginBottom: "40px",
           }}
         >
           <h1 style={{ textAlign: "center", marginTop: "20px", color: "#333" }}>

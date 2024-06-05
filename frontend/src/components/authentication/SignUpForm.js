@@ -12,6 +12,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
 function Copyright(props) {
   return (
     <Typography
@@ -40,6 +43,7 @@ export default function SignUpForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   let name = firstName + " " + lastName;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   let userData = {
@@ -68,7 +72,10 @@ export default function SignUpForm() {
         });
 
         if (response.ok) {
-          navigate("/");
+          setOpenSnackbar(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 1500);
         } else {
           setError(
             "A user with this email/username already exists. Please choose a different email/username."
@@ -79,6 +86,10 @@ export default function SignUpForm() {
         setError("An error occurred");
       }
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -191,6 +202,19 @@ export default function SignUpForm() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={1000}
+          onClose={handleCloseSnackbar}
+        >
+          <MuiAlert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Account created successfully!
+          </MuiAlert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );

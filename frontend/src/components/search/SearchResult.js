@@ -38,6 +38,7 @@ const SearchResults = () => {
         justifyContent: "center",
         alignItems: "center",
         bgcolor: "#f5f5f5",
+        overflowX: "hidden",
       }}
     >
       <Box
@@ -47,6 +48,7 @@ const SearchResults = () => {
           flex: 1,
           bgcolor: "#E8E8E8",
           boxShadow: 3,
+          overflowX: "hidden",
         }}
       >
         <Breadcrumbs
@@ -175,11 +177,7 @@ const SearchResults = () => {
           </Box>
         )}
       </Box>
-      <Footer
-        sx={{
-          mt: 4,
-        }}
-      />
+      <Footer />
     </Box>
   );
 };

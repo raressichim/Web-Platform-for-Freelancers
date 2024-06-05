@@ -16,6 +16,7 @@ import {
   DialogTitle,
   ThemeProvider,
   Snackbar,
+  Alert,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme } from "@mui/material/styles";
@@ -108,7 +109,7 @@ export default function LogInForm() {
         setSnackbarOpen(true);
         setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 1000);
       } else {
         setError("Authentication failed");
       }
@@ -295,11 +296,18 @@ export default function LogInForm() {
 
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={() => setSnackbarOpen(false)}
-        message="Logged in successfully!"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      />
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          sx={{ width: "100%", color: "white", backgroundColor: "black" }}
+        >
+          Logged in successfully!
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }
